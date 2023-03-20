@@ -19,7 +19,7 @@
   },
    "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/Rhinox/magnus.git"
+    "url": "git+https://github.com/Rhinox-Training/magnus.git"
   },
   "author": "Rhinox",
   "type": "library"
