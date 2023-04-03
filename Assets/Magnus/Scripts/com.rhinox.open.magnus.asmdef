@@ -1,0 +1,21 @@
+{
+    "name": "com.rhinox.open.magnus",
+    "references": [
+        "Unity.TextMeshPro",
+        "com.rhinox.open.lightspeed",
+        "com.rhinox.open.perceptor",
+        "com.rhinox.open.guiutils",
+        "com.rhinox.open.guiutils.attributes",
+        "com.rhinox.open.utilities",
+        "nl.elraccoone.tweens"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

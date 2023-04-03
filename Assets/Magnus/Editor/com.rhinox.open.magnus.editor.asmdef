@@ -1,0 +1,27 @@
+{
+    "name": "com.rhinox.open.magnus.editor",
+    "references": [
+        "com.rhinox.open.guiutils",
+        "com.rhinox.open.guiutils.editor",
+        "com.rhinox.open.guiutils.attributes",
+        "com.rhinox.open.guiutils.odin.editor",
+        "com.rhinox.open.lightspeed.editor",
+        "com.rhinox.open.perceptor",
+        "com.rhinox.open.utilities",
+        "com.rhinox.open.utilities.odin.editor",
+        "com.rhinox.open.utilities.editor",
+        "com.rhinox.open.magnus",
+        "com.rhinox.open.lightspeed"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

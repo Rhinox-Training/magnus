@@ -125,7 +125,7 @@ namespace Rhinox.Magnus.Editor
 
         public void Apply()
         {
-            EditorUserBuildSettings.SwitchActiveBuildTarget(activeBuildTarget);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildPipeline.GetBuildTargetGroup(activeBuildTarget), activeBuildTarget);
             PlayerSettings.SetScriptingDefineSymbolsForGroup(selectedBuildTargetGroup, activeScriptCompilationDefines);
             EditorUserBuildSettings.allowDebugging = allowDebugging;
             EditorUserBuildSettings.androidBuildSubtarget = androidBuildSubtarget;

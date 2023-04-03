@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Rhinox.Lightspeed.IO;
+using Rhinox.Utilities;
 using Rhinox.Utilities.Editor;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,12 +18,6 @@ namespace Rhinox.Magnus.Editor
     [Obsolete] // TODO: can this be removed?
     public class BuildPipelineConfig : CustomProjectSettings<BuildPipelineConfig>, IPreprocessBuildWithReport
     {
-        [SettingsProvider]
-        public static SettingsProvider CreatePostBuildSettingsProvider()
-        {
-            return Instance.CreateSettingsProvider();
-        }
-        
         [ListDrawerSettings(DraggableItems = true)]
         public List<PreBuildStep> PreBuildSteps = new List<PreBuildStep>();
         

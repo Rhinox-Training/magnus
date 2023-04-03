@@ -69,7 +69,7 @@ namespace Rhinox.Magnus.Editor
             searchString = searchString.Trim();
 
             AssetDatabase.Refresh();
-            var configs = AssetExtensions.FindScriptableObjectsOfType<BuildConfig>();
+            var configs = Utility.FindScriptableObjectsOfType<BuildConfig>();
             foreach (var config in configs)
             {
                 if (config.name.Equals(searchString, StringComparison.InvariantCulture))
