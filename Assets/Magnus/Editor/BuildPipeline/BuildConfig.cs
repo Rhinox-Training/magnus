@@ -265,8 +265,10 @@ namespace Rhinox.Magnus.Editor
             if (config.WaitForPlayerConnection)
                 options |= BuildOptions.WaitForPlayerConnection;
 
+#if !UNITY_2021_2_OR_NEWER
             if (config.Headless)
                 options |= BuildOptions.EnableHeadlessMode;
+#endif
 
             switch (config.Compression)
             {

@@ -9,16 +9,26 @@ namespace Rhinox.Magnus.Editor
         public string activeScriptCompilationDefines;
         public bool allowDebugging;
         public MobileTextureSubtarget androidBuildSubtarget;
+#if !UNITY_2021_2_OR_NEWER
         public bool androidCreateSymbolsZip;
+#else
+        public AndroidCreateSymbols androidCreateSymbolsZip;
+#endif
         public AndroidETC2Fallback androidETC2Fallback;
         public bool buildAppBundle;
         public bool buildScriptsOnly;
         public bool buildWithDeepProfilingSupport;
         public bool compressFilesInPackage;
+#if !UNITY_2021_2_OR_NEWER
         public bool compressWithPsArc;
+#endif
         public bool connectProfiler;
         public bool development;
+#if !UNITY_2021_2_OR_NEWER
         public bool enableHeadlessMode;
+#else
+        public StandaloneBuildSubtarget standaloneBuildSubtarget;
+#endif
         public bool explicitArrayBoundsChecks;
         public bool explicitDivideByZeroChecks;
         public bool explicitNullChecks;
@@ -35,7 +45,11 @@ namespace Rhinox.Magnus.Editor
         public BuildTargetGroup selectedBuildTargetGroup;
         public BuildTarget selectedStandaloneTarget;
         public int streamingInstallLaunchRange;
+#if !UNITY_2021_2_OR_NEWER
         public bool symlinkLibraries;
+#else
+        public bool symlinkSources;
+#endif
         public bool waitForManagedDebugger;
         public bool waitForPlayerConnection;
         public string buildLocation;
@@ -47,16 +61,26 @@ namespace Rhinox.Magnus.Editor
             data.activeScriptCompilationDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             data.allowDebugging = EditorUserBuildSettings.allowDebugging;
             data.androidBuildSubtarget = EditorUserBuildSettings.androidBuildSubtarget;
+#if !UNITY_2021_2_OR_NEWER
             data.androidCreateSymbolsZip = EditorUserBuildSettings.androidCreateSymbolsZip;
+#else
+            data.androidCreateSymbolsZip = EditorUserBuildSettings.androidCreateSymbols;
+#endif
             data.androidETC2Fallback = EditorUserBuildSettings.androidETC2Fallback;
             data.buildAppBundle = EditorUserBuildSettings.buildAppBundle;
             data.buildScriptsOnly = EditorUserBuildSettings.buildScriptsOnly;
             data.buildWithDeepProfilingSupport = EditorUserBuildSettings.buildWithDeepProfilingSupport;
             data.compressFilesInPackage = EditorUserBuildSettings.compressFilesInPackage;
+#if !UNITY_2021_2_OR_NEWER
             data.compressWithPsArc = EditorUserBuildSettings.compressWithPsArc;
+#endif
             data.connectProfiler = EditorUserBuildSettings.connectProfiler;
             data.development = EditorUserBuildSettings.development;
+#if !UNITY_2021_2_OR_NEWER
             data.enableHeadlessMode = EditorUserBuildSettings.enableHeadlessMode;
+#else
+            data.standaloneBuildSubtarget = EditorUserBuildSettings.standaloneBuildSubtarget;
+#endif
             data.explicitArrayBoundsChecks = EditorUserBuildSettings.explicitArrayBoundsChecks;
             data.explicitDivideByZeroChecks = EditorUserBuildSettings.explicitDivideByZeroChecks;
             data.explicitNullChecks = EditorUserBuildSettings.explicitNullChecks;
@@ -75,7 +99,11 @@ namespace Rhinox.Magnus.Editor
             data.selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
             data.selectedStandaloneTarget = EditorUserBuildSettings.selectedStandaloneTarget;
             data.streamingInstallLaunchRange = EditorUserBuildSettings.streamingInstallLaunchRange;
+#if !UNITY_2021_1_OR_NEWER
             data.symlinkLibraries = EditorUserBuildSettings.symlinkLibraries;
+#else
+            data.symlinkSources = EditorUserBuildSettings.symlinkSources;
+#endif
             data.waitForManagedDebugger = EditorUserBuildSettings.waitForManagedDebugger;
             data.waitForPlayerConnection = EditorUserBuildSettings.waitForPlayerConnection;
             // data.windowsDevicePortalAddress = EditorUserBuildSettings.windowsDevicePortalAddress;
@@ -129,23 +157,32 @@ namespace Rhinox.Magnus.Editor
             PlayerSettings.SetScriptingDefineSymbolsForGroup(selectedBuildTargetGroup, activeScriptCompilationDefines);
             EditorUserBuildSettings.allowDebugging = allowDebugging;
             EditorUserBuildSettings.androidBuildSubtarget = androidBuildSubtarget;
+#if !UNITY_2021_2_OR_NEWER
             EditorUserBuildSettings.androidCreateSymbolsZip = androidCreateSymbolsZip;
+#else
+            EditorUserBuildSettings.androidCreateSymbols = androidCreateSymbolsZip;
+#endif
             EditorUserBuildSettings.androidETC2Fallback = androidETC2Fallback;
             EditorUserBuildSettings.buildAppBundle = buildAppBundle;
             EditorUserBuildSettings.buildScriptsOnly = buildScriptsOnly;
             EditorUserBuildSettings.buildWithDeepProfilingSupport = buildWithDeepProfilingSupport;
             EditorUserBuildSettings.compressFilesInPackage = compressFilesInPackage;
+#if !UNITY_2021_2_OR_NEWER
             EditorUserBuildSettings.compressWithPsArc = compressWithPsArc;
+#endif
             EditorUserBuildSettings.connectProfiler = connectProfiler;
             EditorUserBuildSettings.development = development;
+#if !UNITY_2021_1_OR_NEWER
             EditorUserBuildSettings.enableHeadlessMode = enableHeadlessMode;
+#else
+            EditorUserBuildSettings.standaloneBuildSubtarget = standaloneBuildSubtarget;
+#endif
             EditorUserBuildSettings.explicitArrayBoundsChecks = explicitArrayBoundsChecks;
             EditorUserBuildSettings.explicitDivideByZeroChecks = explicitDivideByZeroChecks;
             EditorUserBuildSettings.explicitNullChecks = explicitNullChecks;
             EditorUserBuildSettings.exportAsGoogleAndroidProject = exportAsGoogleAndroidProject;
             EditorUserBuildSettings.forceInstallation = forceInstallation;
             EditorUserBuildSettings.installInBuildFolder = installInBuildFolder;
-            EditorUserBuildSettings.iOSBuildConfigType = iOSBuildConfigType;
 #if UNITY_2021_1_OR_NEWER
             EditorUserBuildSettings.iOSXcodeBuildConfig = iOSBuildConfigType;
 #else
@@ -159,7 +196,11 @@ namespace Rhinox.Magnus.Editor
             EditorUserBuildSettings.selectedBuildTargetGroup = selectedBuildTargetGroup;
             EditorUserBuildSettings.selectedStandaloneTarget = selectedStandaloneTarget;
             EditorUserBuildSettings.streamingInstallLaunchRange = streamingInstallLaunchRange;
+#if !UNITY_2021_1_OR_NEWER
             EditorUserBuildSettings.symlinkLibraries = symlinkLibraries;
+#else
+            EditorUserBuildSettings.symlinkSources = symlinkSources;
+#endif
             EditorUserBuildSettings.waitForManagedDebugger = waitForManagedDebugger;
             EditorUserBuildSettings.waitForPlayerConnection = waitForPlayerConnection;
             // EditorUserBuildSettings.windowsDevicePortalAddress = windowsDevicePortalAddress;

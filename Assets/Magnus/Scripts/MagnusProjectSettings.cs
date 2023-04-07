@@ -1,5 +1,7 @@
 ﻿using System;
 using Rhinox.Lightspeed;
+using Rhinox.Lightspeed.Collections;
+using Rhinox.Lightspeed.Reflection;
 using Rhinox.Utilities;
 using Rhinox.Utilities.Attributes;
 using Sirenix.OdinInspector;
@@ -22,6 +24,17 @@ namespace Rhinox.Magnus
         [Title("Command System")]
         public string CommandSystemSecret;
 
+        [Title("Services"), HideLabel] 
+        public ServiceSettings ServiceSettings;
+
+        private void OnEnable()
+        {
+            if (ServiceSettings == null)
+                ServiceSettings = new ServiceSettings();
+
+            ServiceSettings.Reinitialize();
+        }
+        
         protected override void LoadDefaults()
         {
             base.LoadDefaults();

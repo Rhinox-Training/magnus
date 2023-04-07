@@ -17,3 +17,81 @@ MonoBehaviour:
   PlayerConfig: {fileID: 11400000, guid: 5da32017879a5c343b865b381d87d005, type: 2}
   GameModes: {fileID: 0}
   CommandSystemSecret: 
+  ServiceSettings:
+    Services:
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.LayerManager, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: LayerManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 0
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.SceneReadyHandler, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: SceneReadyHandler
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 0
+      _baseType:
+        _assemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _assemblyQualifiedName: DefaultNamespace.TestService, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        _name: TestService
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus.console, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.CommandSystem.ConsoleCommandManager,
+          com.rhinox.open.magnus.console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: ConsoleCommandManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.LevelLoader, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: LevelLoader
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 0
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.GameModeManager, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: GameModeManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.PlayerManager, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: PlayerManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
