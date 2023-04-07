@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.IO;
@@ -18,6 +19,9 @@ namespace Rhinox.Magnus.Editor
         private UnityUserBuildSettingsData _backupSettings;
         private UnityUserBuildSettingsData _currentSettings;
         private bool _isBuilding;
+#if UNITY_2021_2_OR_NEWER
+        private static MethodInfo _activeSubTargetMethod;
+#endif
         public int callbackOrder => -1;
 
         public EditorBuildTask(BuildConfig config)
@@ -238,7 +242,7 @@ namespace Rhinox.Magnus.Editor
             return str;
         }
         
-        private static bool BuildProject(string[] scenes, string targetDir, BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, BuildOptions buildOptions){
+        private bool BuildProject(string[] scenes, string targetDir, BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, BuildOptions buildOptions){
             Debug.Log("Building:" + targetDir + " buildTargetGroup:" + buildTargetGroup.ToString() + " buildTarget:" + buildTarget.ToString());
 
             // https://docs.unity3d.com/ScriptReference/EditorUserBuildSettings.SwitchActiveBuildTarget.html
@@ -252,7 +256,20 @@ namespace Rhinox.Magnus.Editor
             // }
 
             // https://docs.unity3d.com/ScriptReference/BuildPipeline.BuildPlayer.html
-            BuildReport buildReport = BuildPipeline.BuildPlayer(scenes, targetDir, buildTarget, buildOptions);
+
+            var options = new BuildPlayerOptions()
+            {
+                scenes = scenes,
+                locationPathName = targetDir,
+                targetGroup = buildTargetGroup,
+                target = buildTarget,
+                options = buildOptions,
+#if UNITY_2021_2_OR_NEWER
+                subtarget = FindSubTarget(buildTarget)
+#endif
+            };
+            
+            BuildReport buildReport = BuildPipeline.BuildPlayer(options);
             BuildSummary buildSummary = buildReport.summary;
             if (buildSummary.result == BuildResult.Succeeded){
                 Debug.Log("Build Success: Time:" + buildSummary.totalTime + " Size:" + buildSummary.totalSize + " bytes");
@@ -263,6 +280,22 @@ namespace Rhinox.Magnus.Editor
                 return false;
             }
         }
+
+#if UNITY_2021_2_OR_NEWER
+        private int FindSubTarget(BuildTarget buildTarget)
+        {
+            if (_config.Headless && buildTarget.IsStandalone())
+                return (int)StandaloneBuildSubtarget.Server;
+
+            if (_activeSubTargetMethod == null)
+            {
+                _activeSubTargetMethod = typeof(EditorUserBuildSettings).GetMethod("GetActiveSubtargetFor",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            }
+            
+            return (int)_activeSubTargetMethod.Invoke(null, new object[] {buildTarget});
+        }
+#endif
 
         public IEnumerator RunPostBuild(BuildTarget target, string pathToBuiltProject)
         {

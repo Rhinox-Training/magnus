@@ -12,15 +12,37 @@ namespace Rhinox.Magnus
 {
     public static class Services
     {
-        public static IService FindService<T>() where T : IService
+        public static T FindService<T>() where T : IService
         {
-            return ServiceInitiator.ActiveServices.FirstOrDefault(x => x is T);
+            return ServiceInitiator.ActiveServices.OfType<T>().FirstOrDefault();
         }
 
         public static IService FindService(string name)
         {
             return ServiceInitiator.ActiveServices.FirstOrDefault(x =>
                 x.GetType().Name.Equals(name, StringComparison.InvariantCulture));
+        }
+
+        public static IEnumerable<Type> GetAvailableServices()
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (!type.InheritsFrom(typeof(AutoService<>)) || type.IsAbstract || type.IsGenericTypeDefinition)
+                        continue;
+
+                    var serviceTypeAttribute =
+                        CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(type);
+                    if (serviceTypeAttribute == null)
+                        continue;
+
+                    if (type == typeof(InternalHelperService)) // NOTE: Invisible for developers
+                        continue;
+                    
+                    yield return type;
+                }
+            }
         }
     }
 
@@ -48,11 +70,13 @@ namespace Rhinox.Magnus
                     if (serviceTypeAttribute == null)
                         continue;
 
+                    if (!ShouldLoadService(type))
+                        continue;
                     types.Add(type);
                 }
             }
 
-            types.SortBy(x => CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(x).Order);
+            types.SortBy(x => CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(x).LoadOrder);
 
             var serviceLoad = new List<IService>();
             for (var i = 0; i < types.Count; i++)
@@ -67,6 +91,17 @@ namespace Rhinox.Magnus
 #if UNITY_EDITOR
             UnloadService<InternalHelperService>();
             AwakeServices();
+#endif
+        }
+
+        private static bool ShouldLoadService(Type t)
+        {
+#if UNITY_2020_1_OR_NEWER
+            if (MagnusProjectSettings.Instance.ServiceSettings == null)
+                return true;
+            return MagnusProjectSettings.Instance.ServiceSettings.ShouldLoadService(t);
+#else
+            return true;
 #endif
         }
 

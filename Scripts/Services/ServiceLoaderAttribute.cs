@@ -4,10 +4,10 @@ namespace Rhinox.Magnus
 {
     public class ServiceLoaderAttribute : Attribute
     {
-        public int Order { get; }
-        public ServiceLoaderAttribute(int order = 0)
+        public int LoadOrder { get; }
+        public ServiceLoaderAttribute(int loadOrder = 0)
         {
-            Order = order;
+            LoadOrder = loadOrder;
         }
     }
 }

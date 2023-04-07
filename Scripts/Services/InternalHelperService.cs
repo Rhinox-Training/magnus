@@ -10,7 +10,7 @@ namespace Rhinox.Magnus
         {
             base.OnInitialize();
 #if !UNITY_EDITOR
-            var go = transform.GetOrAddComponent<ServiceLoaderHelper>();
+            var go = transform.GetOrAddComponent<ServiceAwakerHelper>();
             go.hideFlags = HideFlags.HideAndDontSave;
 #endif
         }
