@@ -6,12 +6,14 @@ using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Reflection;
 using Rhinox.Perceptor;
 using Rhinox.Utilities.Attributes;
+using UnityEditor;
 using UnityEngine;
 
 namespace Rhinox.Magnus
 {
     public static class Services
     {
+
         public static T FindService<T>() where T : IService
         {
             return ServiceInitiator.ActiveServices.OfType<T>().FirstOrDefault();
@@ -23,26 +25,48 @@ namespace Rhinox.Magnus
                 x.GetType().Name.Equals(name, StringComparison.InvariantCulture));
         }
 
+#if !UNITY_EDITOR
+        private static List<Type> _availableServiceTypes;
+#endif
         public static IEnumerable<Type> GetAvailableServices()
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+#if UNITY_EDITOR
+            foreach (var type in TypeCache.GetTypesWithAttribute<ServiceLoaderAttribute>())
             {
-                foreach (var type in assembly.GetTypes())
+                if (!type.InheritsFrom(typeof(AutoService<>)) || type.IsAbstract || type.IsGenericTypeDefinition)
+                    continue;
+
+                if (type == typeof(InternalHelperService)) // NOTE: Invisible for developers
+                    continue;
+
+                yield return type;
+            }
+#else
+            if (_availableServiceTypes == null)
+            {
+                _availableServiceTypes = new List<Type>();
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (!type.InheritsFrom(typeof(AutoService<>)) || type.IsAbstract || type.IsGenericTypeDefinition)
-                        continue;
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        if (!type.InheritsFrom(typeof(AutoService<>)) || type.IsAbstract ||
+                            type.IsGenericTypeDefinition)
+                            continue;
 
-                    var serviceTypeAttribute =
-                        CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(type);
-                    if (serviceTypeAttribute == null)
-                        continue;
+                        var serviceTypeAttribute =
+                            CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(type);
+                        if (serviceTypeAttribute == null)
+                            continue;
 
-                    if (type == typeof(InternalHelperService)) // NOTE: Invisible for developers
-                        continue;
-                    
-                    yield return type;
+                        if (type == typeof(InternalHelperService)) // NOTE: Invisible for developers
+                            continue;
+
+                        _availableServiceTypes.Add(type);
+                    }
                 }
             }
+            return _availableServiceTypes;
+#endif
         }
     }
 
@@ -59,21 +83,11 @@ namespace Rhinox.Magnus
             Application.quitting += OnQuitting;
             
             List<Type> types = new List<Type>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var type in Services.GetAvailableServices())
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (!type.InheritsFrom(typeof(AutoService<>)) || type.IsAbstract || type.IsGenericTypeDefinition)
-                        continue;
-
-                    var serviceTypeAttribute = CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(type);
-                    if (serviceTypeAttribute == null)
-                        continue;
-
-                    if (!ShouldLoadService(type))
-                        continue;
-                    types.Add(type);
-                }
+                if (!ShouldLoadService(type))
+                    continue;
+                types.Add(type);
             }
 
             types.SortBy(x => CustomAttributeExtensions.GetCustomAttribute<ServiceLoaderAttribute>(x).LoadOrder);
@@ -96,13 +110,9 @@ namespace Rhinox.Magnus
 
         private static bool ShouldLoadService(Type t)
         {
-#if UNITY_2020_1_OR_NEWER
             if (MagnusProjectSettings.Instance.ServiceSettings == null)
                 return true;
             return MagnusProjectSettings.Instance.ServiceSettings.ShouldLoadService(t);
-#else
-            return true;
-#endif
         }
 
         private static void OnQuitting()
