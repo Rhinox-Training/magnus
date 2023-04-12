@@ -21,28 +21,6 @@ MonoBehaviour:
     Services:
     - Toggled: 1
       _baseType:
-        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-        _assemblyQualifiedName: Rhinox.Magnus.LayerManager, com.rhinox.open.magnus,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        _name: LayerManager
-      ServiceType:
-        _assemblyName: 
-        _assemblyQualifiedName: 
-        _name: 
-    - Toggled: 0
-      _baseType:
-        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-        _assemblyQualifiedName: Rhinox.Magnus.SceneReadyHandler, com.rhinox.open.magnus,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        _name: SceneReadyHandler
-      ServiceType:
-        _assemblyName: 
-        _assemblyQualifiedName: 
-        _name: 
-    - Toggled: 0
-      _baseType:
         _assemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         _assemblyQualifiedName: DefaultNamespace.TestService, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -73,7 +51,7 @@ MonoBehaviour:
         _assemblyName: 
         _assemblyQualifiedName: 
         _name: 
-    - Toggled: 0
+    - Toggled: 1
       _baseType:
         _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -91,6 +69,28 @@ MonoBehaviour:
         _assemblyQualifiedName: Rhinox.Magnus.PlayerManager, com.rhinox.open.magnus,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         _name: PlayerManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.LayerManager, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: LayerManager
+      ServiceType:
+        _assemblyName: 
+        _assemblyQualifiedName: 
+        _name: 
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.SceneReadyHandler, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: SceneReadyHandler
       ServiceType:
         _assemblyName: 
         _assemblyQualifiedName: 
