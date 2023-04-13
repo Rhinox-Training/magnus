@@ -15,6 +15,7 @@ namespace Rhinox.Magnus
     public class ServiceSettingsEntry
     {
         private const int FIRST_COL_WIDTH = 100;
+        private const int LAST_COL_WIDTH = 50;
         
         [HorizontalGroup("TitleRow", FIRST_COL_WIDTH), HideLabel]
         public bool Toggled = true;
@@ -25,7 +26,7 @@ namespace Rhinox.Magnus
         [HorizontalGroup("TitleRow"), SerializeField, HideLabel, DisplayAsString, EnableIf(nameof(Toggled))]
         private SerializableType _baseType;
 
-        [HorizontalGroup("TitleRow", MaxWidth = 50), SerializeField, HideLabel, DisplayAsString]
+        [HorizontalGroup("TitleRow", LAST_COL_WIDTH), SerializeField, HideLabel, DisplayAsStringAligned(TextAlignment.Right)]
         private int _servicePriority;
 
         public int Priority => _servicePriority;
