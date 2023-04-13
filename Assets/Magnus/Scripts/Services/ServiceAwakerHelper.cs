@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Rhinox.Magnus
 {
-    internal class ServiceLoaderHelper : MonoBehaviour
+    internal class ServiceAwakerHelper : MonoBehaviour
     {
         private void OnDestroy()
         {

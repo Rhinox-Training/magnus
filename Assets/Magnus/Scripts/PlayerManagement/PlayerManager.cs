@@ -14,8 +14,8 @@ namespace Rhinox.Magnus
     [ServiceLoader(-4001), ExecutionOrder(-4001)]
     public class PlayerManager : AutoService<PlayerManager>
     {
-        private Player _loadedPlayer;
-        private PlayerProfile _currentPlayerProfile;
+        protected Player _loadedPlayer;
+        protected PlayerProfile _currentPlayerProfile;
 
         [ShowReadOnlyInPlayMode]
         public Player ActivePlayer => _loadedPlayer;
@@ -152,6 +152,8 @@ namespace Rhinox.Magnus
             if (_loadedPlayer == null)
                 return true;
             PlayerConfig config = FindPlayerConfig();
+            if (config == MagnusProjectSettings.Instance.PlayerConfig && IsPlayerPersistent)
+                return true;
             return config == _loadedPlayer.LoadedConfig;
         }
 

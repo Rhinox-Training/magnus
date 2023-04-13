@@ -18,10 +18,10 @@ namespace Rhinox.Magnus.Editor
     [Obsolete] // TODO: can this be removed?
     public class BuildPipelineConfig : CustomProjectSettings<BuildPipelineConfig>, IPreprocessBuildWithReport
     {
-        [ListDrawerSettings(DraggableItems = true)]
+        [ListDrawerSettings(DraggableItems = true), SerializeReference]
         public List<PreBuildStep> PreBuildSteps = new List<PreBuildStep>();
         
-        [ListDrawerSettings(DraggableItems = true)]
+        [ListDrawerSettings(DraggableItems = true), SerializeReference]
         public List<PostBuildStep> PostBuildSteps = new List<PostBuildStep>();
     
         public int callbackOrder => -1;

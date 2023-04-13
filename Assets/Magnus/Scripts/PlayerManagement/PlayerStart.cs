@@ -10,12 +10,6 @@ namespace Rhinox.Magnus
     public class PlayerStart : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [MenuItem("GameObject/Player Start", priority = 232)]
-        public static void Foobar()
-        {
-            Debug.Log("Foobar");
-        }
-        
         private const string OPERATION_NAME = "GameObject/Player Start";
         
         [MenuItem(OPERATION_NAME, false, 26)]
@@ -27,11 +21,6 @@ namespace Rhinox.Magnus
                 playerStart.transform.SetParent(gameObj.transform, false);
                 playerStart.transform.Reset();
             }
-            else
-            {
-            }
-            
-            
         }
         
         [MenuItem(OPERATION_NAME, true)]
