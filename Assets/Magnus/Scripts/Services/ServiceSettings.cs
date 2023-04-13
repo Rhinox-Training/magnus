@@ -181,6 +181,10 @@ namespace Rhinox.Magnus
             return true;
         }
         
+        /// <summary>
+        /// Load service if valid service type and either does not appear in ServiceSettings
+        /// or appears in settings and is enabled
+        /// </summary>
         public bool ShouldLoadService(Type serviceType)
         {
             if (serviceType == null || !serviceType.InheritsFrom<IService>())
