@@ -25,7 +25,7 @@ namespace Rhinox.Magnus.CommandSystem
             
             // Create the return string array
             string[] returnVal = new string[args.Length];
-            
+            string components = string.Empty;
             // Loop over the remaining arguments
             for (int i = 1; i < args.Length; i++)
             {
@@ -40,9 +40,10 @@ namespace Rhinox.Magnus.CommandSystem
                 }
                 // Add the component to the created game object
                 go.AddComponent(t);
+                components = string.Concat(components, t.Name + " ");
             }
             // Return the logged strings
-            returnVal[0] = $"Created '{go.name}' with components of type '{string.Join(", ", go.GetComponents<Component>().Select(c => c.GetType().Name))}'.";
+            returnVal[0] = $"Created '{go.name}' with components of type {components}.";
             return returnVal;
         }
     }
