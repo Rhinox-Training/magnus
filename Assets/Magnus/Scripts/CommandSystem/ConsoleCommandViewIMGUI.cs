@@ -63,7 +63,7 @@ namespace Rhinox.Magnus.CommandSystem
             {
                 // draw dialog
                 GUILayout.Window(UNIQUE_WINDOW_ID, new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT), 
-                    OnDrawWindow, GUIContent.none, CustomGUIStyles.ToolbarBackground);
+                    OnDrawWindow, GUIContent.none, ConsoleGUIStyles.ConsoleBackgroundStyle);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Rhinox.Magnus.CommandSystem
             
             //else
             {
-                GUILayout.BeginVertical(CustomGUIStyles.ToolbarTab);
+                GUILayout.BeginVertical(ConsoleGUIStyles.ToolbarButtonStyle);
                 {
                     GUILayout.FlexibleSpace();
                     if (_outputHistory != null)
@@ -119,7 +119,7 @@ namespace Rhinox.Magnus.CommandSystem
                             try
                             {
                                 foreach (var entry in _outputHistory)
-                                    GUILayout.Label(entry, CustomGUIStyles.UnpaddedLabel);
+                                    GUILayout.Label(entry, ConsoleGUIStyles.ConsoleLabelStyle);
                                 _renderedCountOutput = _outputHistory.Count;
                             }
                             catch (Exception e)
