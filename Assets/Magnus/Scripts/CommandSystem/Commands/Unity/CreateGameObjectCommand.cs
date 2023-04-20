@@ -24,9 +24,8 @@ namespace Rhinox.Magnus.CommandSystem
             go.name = args[0];
 
             // Create the return string array
-            string[] returnVal = new string[2];
-            returnVal[0] = $"Created '{go.name}' with these components:";
-            returnVal[1] = "These components were not found: ";
+            string successString = $"Created '{go.name}' with these components:";
+            string errorString = "These components were not found: ";
             string components = string.Empty;
             bool logMissingComponents = false;
 
@@ -39,7 +38,7 @@ namespace Rhinox.Magnus.CommandSystem
                 // If the type is not found, add an error message
                 if (t == null || !typeof(Component).IsAssignableFrom(t))
                 {
-                    returnVal[1] +=" " + (objectType.Length > 50 ? objectType.Substring(0, 50) : objectType);
+                    errorString += " " + (objectType.Length > 50 ? objectType.Substring(0, 50) : objectType);
                     logMissingComponents = true;
                     continue;
                 }
@@ -50,10 +49,10 @@ namespace Rhinox.Magnus.CommandSystem
             }
 
             // Return the logged strings
-            returnVal[0] += components;
+            successString += components;
 
             // Only return the second string if some components weren't found
-            return logMissingComponents ? returnVal : new[] { returnVal[0] };
+            return logMissingComponents ? new[] { successString, errorString } : new[] { successString };
         }
     }
 }
