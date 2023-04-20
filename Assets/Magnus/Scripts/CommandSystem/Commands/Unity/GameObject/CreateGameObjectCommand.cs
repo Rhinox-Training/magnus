@@ -1,11 +1,11 @@
 using System;
-using System.Linq;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Reflection;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Create a new GameObject with a given name and components", "GameObject")]
     public class CreateGameObjectCommand : IConsoleCommand
     {
         public string CommandName => "create";
