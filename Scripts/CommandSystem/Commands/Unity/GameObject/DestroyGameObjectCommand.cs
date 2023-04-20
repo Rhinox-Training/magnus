@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Destroy a target GameObject", "GameObject")]
     public class DestroyGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "destroy";

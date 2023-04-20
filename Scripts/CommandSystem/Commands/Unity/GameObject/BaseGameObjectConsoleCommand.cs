@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("No description added", "GameObject")]
     public abstract class BaseGameObjectConsoleCommand : IConsoleCommand
     {
         public abstract string CommandName { get; }

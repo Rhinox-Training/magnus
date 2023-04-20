@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Reflection;
-using Rhinox.Magnus.CommandSystem;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Add components to GameObject","GameObject")]
     public class AddComponentsToGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "add-components";
@@ -18,13 +16,16 @@ namespace Rhinox.Magnus.CommandSystem
             {
                 return new string[]
                 {
-                    "Command missing arguments. Command format is: add-component <gameObject name> <component1 name> <component2 name> ..."
+                    "Command format is: add-components <gameObject name> <component1 name> <component2 name> ..."
                 };
             }
 
             // Create the return string array
-            var returnVal = new List<string>(7) { "Created '{go.name}' with components of type: " };
+            string successString = $"Created '{go.name}' with these components:";
+            string errorString = "These components were not found: ";
             string components = string.Empty;
+            bool logMissingComponents = false;
+
             // Loop over the remaining arguments
             for (int i = 0; i < args.Length; i++)
             {
@@ -34,7 +35,8 @@ namespace Rhinox.Magnus.CommandSystem
                 // If the type is not found, add an error message
                 if (t == null || !typeof(Component).IsAssignableFrom(t))
                 {
-                    returnVal.Add($"Component type '{objectType.Take(50)}' not found. (Type: '{t?.Name}')");
+                    errorString += " " + (objectType.Length > 50 ? objectType.Substring(0, 50) : objectType);
+                    logMissingComponents = true;
                     continue;
                 }
 
@@ -44,9 +46,10 @@ namespace Rhinox.Magnus.CommandSystem
             }
 
             // Return the logged strings
-            returnVal[0] += components;
+            successString += components;
 
-            return returnVal.ToArray();
+            // Only return the second string if some components weren't found
+            return logMissingComponents ? new[] { successString, errorString } : new[] { successString };
         }
     }
 }
