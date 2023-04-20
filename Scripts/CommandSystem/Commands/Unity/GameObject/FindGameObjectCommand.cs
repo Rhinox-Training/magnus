@@ -8,7 +8,7 @@ namespace Rhinox.Magnus.CommandSystem
     {
         public override string CommandName => "find";
         
-        protected override string[] ExecuteFor(GameObject go)
+        protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             return new [] { $"{PrintObjectFullname(go)}",
                 $"   position: {go.transform.position.Print()}" ,
