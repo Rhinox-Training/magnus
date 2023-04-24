@@ -20,7 +20,7 @@ namespace Rhinox.Magnus.CommandSystem
         private ICollection<IConsoleCommand> _suggestions = new List<IConsoleCommand>();
         private const int SUGGESTIONS_SIZE_LIMIT = 4;
         private const int SUGGESTION_WINDOW_ID = 150151;
-        private const int SUGGESTION_MAX_WINDOW_HEIGHT = 80;
+        private Vector2 _suggestionScrollPosition;
 
         private const int WINDOW_WIDTH = 450;
         private const int WINDOW_HEIGHT = 300;
@@ -39,6 +39,7 @@ namespace Rhinox.Magnus.CommandSystem
 
         private int _pickPreviousCommand;
         private int _renderedCountOutput;
+        private float _labelHeight;
 
         private void Awake()
         {
@@ -47,6 +48,10 @@ namespace Rhinox.Magnus.CommandSystem
             _pickPreviousCommand = -1;
             _renderedCountOutput = -1;
             _currentCommand = string.Empty;
+
+            GUIStyle defaultLabelStyle = ConsoleGUIStyles.ConsoleLabelStyle;
+            _labelHeight =
+                defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), EditorGUIUtility.currentViewWidth);
         }
 
         private void Start()
@@ -67,9 +72,8 @@ namespace Rhinox.Magnus.CommandSystem
             if (_visible)
             {
                 var backgroundColor = GUI.backgroundColor;
-
                 GUI.backgroundColor = Color.gray;
-                
+
                 // draw dialog
                 GUILayout.Window(UNIQUE_WINDOW_ID,
                     new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT),
@@ -85,17 +89,16 @@ namespace Rhinox.Magnus.CommandSystem
                 // Calculate the appropriate height of the suggestion window
                 float height;
                 if (_suggestions.Count <= SUGGESTIONS_SIZE_LIMIT)
-                    height = _suggestions.Count * (SUGGESTION_MAX_WINDOW_HEIGHT / (float)SUGGESTIONS_SIZE_LIMIT);
+                    height = _suggestions.Count * _labelHeight;
                 else
-                    height = SUGGESTION_MAX_WINDOW_HEIGHT;
-
+                    height = SUGGESTIONS_SIZE_LIMIT * _labelHeight;
 
                 GUI.backgroundColor = Color.black;
                 // draw suggestions
                 GUILayout.Window(SUGGESTION_WINDOW_ID,
-                    new Rect(0, Screen.height - height - 20, WINDOW_WIDTH / 2f, height),
+                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH / 2f, height),
                     OnDrawSuggestionWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
-                
+
                 GUI.backgroundColor = backgroundColor;
             }
         }
@@ -189,8 +192,23 @@ namespace Rhinox.Magnus.CommandSystem
         {
             GUILayout.BeginVertical();
 
-            foreach (IConsoleCommand entry in _suggestions)
-                GUILayout.Label(entry.CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
+            if (_suggestions.Count > SUGGESTIONS_SIZE_LIMIT)
+            {
+                for (int i = 0; i < SUGGESTIONS_SIZE_LIMIT; ++i)
+                {
+                    GUILayout.Label(_suggestions.ElementAt(i).CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
+                }
+
+                GUILayout.Label("...", ConsoleGUIStyles.ConsoleLabelStyle);
+
+            }
+            else
+            {
+                foreach (IConsoleCommand entry in _suggestions)
+                {
+                    GUILayout.Label(entry.CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
+                }
+            }
 
             GUILayout.EndVertical();
         }
