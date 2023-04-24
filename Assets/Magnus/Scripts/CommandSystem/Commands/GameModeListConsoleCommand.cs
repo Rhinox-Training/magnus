@@ -6,7 +6,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class GameModeListConsoleCommand : IConsoleCommand
     {
         public string CommandName => "list-modes";
-        
+        public string Syntax => "list-modes";
+
         public string[] Execute(string[] args)
         {
             return new[] { string.Join(", ", GameModeManager.Instance.GetModeNames()) };

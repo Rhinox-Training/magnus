@@ -7,13 +7,14 @@ namespace Rhinox.Magnus.CommandSystem
     public class SetPositionOfGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "set-position";
+        public override string Syntax => "set-position <GameObject name> <new X> <new Y> <new Z>";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if (args.IsNullOrEmpty() || args.Length < 3)
             {
                 return new[]
-                    { "Command signature is: set-position <GameObject name> <new X> <new Y> <new Z>" };
+                    { $"Command signature is: {Syntax}" };
             }
 
             if (!float.TryParse(args[0], out var x))
@@ -34,9 +35,9 @@ namespace Rhinox.Magnus.CommandSystem
                     { "Invalid Z value" };
             }
 
-            var position = new Vector3(x,y,z);
+            var position = new Vector3(x, y, z);
             go.transform.position = position;
-            
+
             return new[] { $"Set the position of {go.name} to ({position.x}, {position.y}, {position.z})" };
         }
     }

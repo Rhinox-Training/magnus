@@ -67,7 +67,7 @@ namespace Rhinox.Magnus.CommandSystem
                 _justOpened = true;
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             if (_visible)
             {
@@ -82,6 +82,7 @@ namespace Rhinox.Magnus.CommandSystem
                 // If there are no suggestions, return
                 if (_suggestions.IsNullOrEmpty())
                 {
+                    //Reset the background color
                     GUI.backgroundColor = backgroundColor;
                     return;
                 }
@@ -94,11 +95,13 @@ namespace Rhinox.Magnus.CommandSystem
                     height = SUGGESTIONS_SIZE_LIMIT * _labelHeight;
 
                 GUI.backgroundColor = Color.black;
+                
                 // draw suggestions
                 GUILayout.Window(SUGGESTION_WINDOW_ID,
-                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH / 2f, height),
+                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, height),
                     OnDrawSuggestionWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
 
+                //Reset the background color
                 GUI.backgroundColor = backgroundColor;
             }
         }
@@ -192,22 +195,11 @@ namespace Rhinox.Magnus.CommandSystem
         {
             GUILayout.BeginVertical();
 
-            if (_suggestions.Count > SUGGESTIONS_SIZE_LIMIT)
+            int limit = (_suggestions.Count > SUGGESTIONS_SIZE_LIMIT) ? SUGGESTIONS_SIZE_LIMIT : _suggestions.Count;
+            for (int i = 0; i < limit; ++i)
             {
-                for (int i = 0; i < SUGGESTIONS_SIZE_LIMIT; ++i)
-                {
-                    GUILayout.Label(_suggestions.ElementAt(i).CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
-                }
-
-                GUILayout.Label("...", ConsoleGUIStyles.ConsoleLabelStyle);
-
-            }
-            else
-            {
-                foreach (IConsoleCommand entry in _suggestions)
-                {
-                    GUILayout.Label(entry.CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
-                }
+                var element = _suggestions.ElementAt(i);
+                GUILayout.Label(element.Syntax, ConsoleGUIStyles.ConsoleLabelStyle);
             }
 
             GUILayout.EndVertical();

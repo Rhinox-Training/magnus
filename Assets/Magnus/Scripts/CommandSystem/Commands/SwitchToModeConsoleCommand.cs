@@ -8,7 +8,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class SwitchToModeConsoleCommand : IConsoleCommand
     {
         public string CommandName => "switch-mode";
-        
+        public string Syntax => "switch-mode <mode name>";
+
         public string[] Execute(string[] args)
         {
             if (args.IsNullOrEmpty())
