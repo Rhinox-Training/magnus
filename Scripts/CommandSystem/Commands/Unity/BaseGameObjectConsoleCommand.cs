@@ -18,10 +18,10 @@ namespace Rhinox.Magnus.CommandSystem
             GameObject go = FindGameObject(objectName);
             if (go == null)
                 return new [] { $"GameObject with name '{objectName}' not found." };
-            return ExecuteFor(go);
+            return ExecuteFor(go, args.Skip(1).ToArray());
         }
 
-        protected abstract string[] ExecuteFor(GameObject go);
+        protected abstract string[] ExecuteFor(GameObject go, string[] args);
 
         protected virtual GameObject FindGameObject(string objectName)
         {
