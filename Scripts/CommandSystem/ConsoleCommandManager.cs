@@ -16,10 +16,12 @@ namespace Rhinox.Magnus.CommandSystem
     {
         private Dictionary<string, IConsoleCommand> _loadedCommands;
 
-        public IReadOnlyCollection<IConsoleCommand> LoadedCommands => _loadedCommands != null ? (IReadOnlyCollection<IConsoleCommand>)_loadedCommands.Values : Array.Empty<IConsoleCommand>();
+        public IReadOnlyCollection<IConsoleCommand> LoadedCommands => _loadedCommands != null
+            ? (IReadOnlyCollection<IConsoleCommand>)_loadedCommands.Values
+            : Array.Empty<IConsoleCommand>();
 
         public const KeyCode OPEN_KEY = KeyCode.BackQuote;
-        
+
         private ConsoleCommandViewIMGUI _commandViewIMGUI;
         private bool _guiAccessEnabled;
 
@@ -42,7 +44,7 @@ namespace Rhinox.Magnus.CommandSystem
                     var instance = Activator.CreateInstance(type) as IConsoleCommand;
                     if (instance == null)
                         continue;
-                    
+
                     if (!RegisterCommand(instance))
                         PLog.Error<MagnusLogger>($"Failed to load command of type {type.FullName}");
                 }
@@ -53,11 +55,12 @@ namespace Rhinox.Magnus.CommandSystem
                 }
             }
         }
-        
+
         private void LoadCommandFiles()
         {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
-            string developerDefaultPath = Path.Combine("%userprofile%\\AppData\\Local\\Unity\\config", COMMAND_FILE_NAME);
+            string developerDefaultPath =
+                Path.Combine("%userprofile%\\AppData\\Local\\Unity\\config", COMMAND_FILE_NAME);
             LoadAndExecuteCommands(developerDefaultPath);
 #endif
             string streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, COMMAND_FILE_NAME);
@@ -66,7 +69,6 @@ namespace Rhinox.Magnus.CommandSystem
 
         private void LoadAndExecuteCommands(string filePath)
         {
-            
             filePath = Environment.ExpandEnvironmentVariables(filePath);
             filePath = Path.GetFullPath(filePath);
             if (!FileHelper.Exists(filePath))
@@ -75,7 +77,7 @@ namespace Rhinox.Magnus.CommandSystem
             string[] lines = FileHelper.ReadAllLines(filePath);
             if (lines == null)
                 return;
-            
+
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
@@ -94,16 +96,18 @@ namespace Rhinox.Magnus.CommandSystem
 
             if (!ValidateCommandName(command.CommandName))
             {
-                PLog.Trace<MagnusLogger>($"Cannot register {command}, CommandName {command.CommandName} can only contain letters, numbers, dashes and/or underscores.");
+                PLog.Trace<MagnusLogger>(
+                    $"Cannot register {command}, CommandName {command.CommandName} can only contain letters, numbers, dashes and/or underscores.");
                 return false;
             }
-            
+
             if (_loadedCommands == null)
                 _loadedCommands = new Dictionary<string, IConsoleCommand>();
 
             if (_loadedCommands.ContainsKey(command.CommandName))
             {
-                PLog.Trace<MagnusLogger>($"Cannot register {command}, CommandName {command.CommandName} already taken.");
+                PLog.Trace<MagnusLogger>(
+                    $"Cannot register {command}, CommandName {command.CommandName} already taken.");
                 return false;
             }
 
@@ -131,7 +135,7 @@ namespace Rhinox.Magnus.CommandSystem
                 PrintOutput(line);
             return true;
         }
-        
+
         private bool FindCommand(string commandStr, out IConsoleCommand command, out string[] args)
         {
             command = null;
@@ -153,6 +157,21 @@ namespace Rhinox.Magnus.CommandSystem
             command = _loadedCommands[commandName];
             args = commandParts.Skip(1).ToArray();
             return true;
+        }
+
+        public ICollection<IConsoleCommand> GetSuggestions(string commandStr)
+        {
+            if (string.IsNullOrWhiteSpace(commandStr))
+                return Array.Empty<IConsoleCommand>();
+
+            var commandParts = Tokenize(commandStr);
+            var command = commandParts[0];
+            var currentSuggestions = _loadedCommands
+                .Where(kvp => kvp.Key.StartsWith(command))
+                .Select(kvp => kvp.Value)
+                .ToList();
+            
+            return currentSuggestions;
         }
 
         private string[] Tokenize(string commandStr)
@@ -206,7 +225,7 @@ namespace Rhinox.Magnus.CommandSystem
             if (_commandViewIMGUI != null)
                 _commandViewIMGUI.PrintOutput(output);
         }
-        
+
         protected override void Update()
         {
             base.Update();
@@ -222,7 +241,7 @@ namespace Rhinox.Magnus.CommandSystem
                     _commandViewIMGUI.Toggle();
             }
         }
-        
+
         internal void EnableGUIAccess()
         {
             if (_guiAccessEnabled)
