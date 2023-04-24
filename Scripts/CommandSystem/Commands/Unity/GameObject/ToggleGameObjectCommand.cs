@@ -7,6 +7,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class ToggleGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "toggle";
+        public override string Syntax =>"toggle <GameObject name>";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             string outputName = PrintObjectFullname(go);

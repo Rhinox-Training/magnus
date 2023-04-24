@@ -7,6 +7,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class SetScaleOfGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "set-scale";
+        public override string Syntax => "set-scale <GameObject name> <X scale> <Y scale> <Z scale>";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
@@ -14,9 +15,7 @@ namespace Rhinox.Magnus.CommandSystem
             {
                 return new[]
                 {
-                    "Command signatures are: ",
-                    "scale <GameObject name> <X scale> <Y scale> <Z scale>",
-                    "scale <GameObject name> <uniform scale>"
+                    $"Command signature is: {Syntax}"
                 };
             }
             Vector3 scale = Vector3.zero;

@@ -7,13 +7,14 @@ namespace Rhinox.Magnus.CommandSystem
     public class TranslateGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "translate";
+        public override string Syntax => "translate <GameObject name> <Translate X> <Translate Y> <Translate Z>";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if (args.IsNullOrEmpty() || args.Length < 3)
             {
                 return new[]
-                    { "Command signature is: translate <GameObject name> <Translate X> <Translate Y> <Translate Z>" };
+                    { $"Command signature is: {Syntax}" };
             }
             
             if(!float.TryParse(args[0], out var x))

@@ -6,6 +6,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class ScaleGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "scale";
+        public override string Syntax => "scale <GameObject name> <X scale> <Y scale> <Z scale>";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
@@ -14,22 +15,12 @@ namespace Rhinox.Magnus.CommandSystem
                 return new[]
                 {
                     "Command signatures are: ",
-                    "scale <GameObject name> <X scale> <Y scale> <Z scale>",
-                    "scale <GameObject name> <uniform scale>"
+                    "scale <GameObject name> <X scale> <Y scale> <Z scale>"
                 };
             }
             Vector3 scale = go.transform.localScale;
             
-            if (args.Length == 1)
-            {
-                if (!float.TryParse(args[0], out var val))
-                {
-                    return new[]
-                        { "Invalid uniform scale value" };
-                }
-                scale += new Vector3(val, val, val);
-            }
-            else if (args.Length >= 3)
+            if (args.Length >= 3)
             {
                 if (!float.TryParse(args[0], out var x))
                 {

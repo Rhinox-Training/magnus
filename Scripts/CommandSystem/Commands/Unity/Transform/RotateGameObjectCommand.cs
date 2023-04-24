@@ -7,13 +7,15 @@ namespace Rhinox.Magnus.CommandSystem
     public class RotateGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "rotate";
+        public override string Syntax => "rotate <GameObject name> <X angle> <Y angle> <Z angle>";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if (args.IsNullOrEmpty() || args.Length < 3)
             {
                 return new[]
                 {
-                    "Command signature is: rotate <GameObject name> <X angle> <Y angle> <Z angle>"
+                    $"Command signature is: {Syntax}"
                 };
             }
 

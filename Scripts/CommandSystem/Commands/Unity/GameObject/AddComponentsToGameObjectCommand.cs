@@ -9,6 +9,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class AddComponentsToGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "add-components";
+        public override string Syntax => "add-components <gameObject name> <component1 name> <component2 name> ...";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
@@ -16,7 +17,7 @@ namespace Rhinox.Magnus.CommandSystem
             {
                 return new string[]
                 {
-                    "Command format is: add-components <gameObject name> <component1 name> <component2 name> ..."
+                    $"Command format is: {Syntax}"
                 };
             }
 

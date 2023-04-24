@@ -7,7 +7,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class UnlockGraphicalConsoleCommand : IConsoleCommand
     {
         public string CommandName => "enable-dev";
-        
+        public string Syntax => "enable-dev <developer token>";
+
         public string[] Execute(string[] args)
         {
             if (args.IsNullOrEmpty())

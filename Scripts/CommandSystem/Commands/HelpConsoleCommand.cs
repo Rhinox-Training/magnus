@@ -8,6 +8,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class HelpConsoleCommand : IConsoleCommand
     {
         public string CommandName => "help";
+        public string Syntax => "help";
+
         public string[] Execute(string[] args)
         {
             var dict = new Dictionary<string, List<string>>();
