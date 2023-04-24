@@ -3,16 +3,17 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    public class SetPositionOfGameObjectCommand : BaseGameObjectConsoleCommand
+    public class RotateGameObjectCommand : BaseGameObjectConsoleCommand
     {
-        public override string CommandName => "set-position";
-
+        public override string CommandName => "rotate";
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if (args.IsNullOrEmpty() || args.Length < 3)
             {
                 return new[]
-                    { "Command signature is: set-position <GameObject name> <new X> <new Y> <new Z>" };
+                {
+                    "Command signature is: rotate <GameObject name> <X angle> <Y angle> <Z angle>"
+                };
             }
 
             if (!float.TryParse(args[0], out var x))
@@ -32,11 +33,11 @@ namespace Rhinox.Magnus.CommandSystem
                 return new[]
                     { "Invalid Z value" };
             }
-
-            var position = new Vector3(x,y,z);
-            go.transform.position = position;
             
-            return new[] { $"Set the position of {go.name} to ({position.x}, {position.y}, {position.z})" };
+            go.transform.Rotate(x, y, z);
+
+            var eulerAngles = go.transform.eulerAngles;
+            return new[] { $"Rotated {go.name} to ({eulerAngles.x}, {eulerAngles.y}, {eulerAngles.z})" };
         }
     }
 }
