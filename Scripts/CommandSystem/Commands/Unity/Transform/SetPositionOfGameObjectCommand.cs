@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Sets the position of a GameObject", "Transform")]
     public class SetPositionOfGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "set-position";
