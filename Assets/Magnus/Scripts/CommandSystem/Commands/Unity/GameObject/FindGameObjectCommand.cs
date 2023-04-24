@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Find a GameObject by name and get its Transform", "GameObject")]
     public class FindGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "find";
         
-        protected override string[] ExecuteFor(GameObject go)
+        protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             return new [] { $"{PrintObjectFullname(go)}",
                 $"   position: {go.transform.position.Print()}" ,
