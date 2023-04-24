@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Toggle the active state of a GameObject", "GameObject")]
     public class ToggleGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "toggle";
