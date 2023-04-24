@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Translate a GameObject", "Transform")]
     public class TranslateGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "translate";

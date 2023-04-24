@@ -3,17 +3,18 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    [CommandInfo("Rotate a GameObject (in Euler angles) ", "Transform")]
-    public class RotateGameObjectCommand : BaseGameObjectConsoleCommand
+    [CommandInfo("Sets the euler rotation of a GameObject", "Transform")]
+    public class SetRotationOfGameObjectCommand : BaseGameObjectConsoleCommand
     {
-        public override string CommandName => "rotate";
+        public override string CommandName => "set-rotation";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if (args.IsNullOrEmpty() || args.Length < 3)
             {
                 return new[]
                 {
-                    "Command signature is: rotate <GameObject name> <X angle> <Y angle> <Z angle>"
+                    "Command signature is: set-rotation <GameObject name> <X angle> <Y angle> <Z angle>"
                 };
             }
 
@@ -34,10 +35,9 @@ namespace Rhinox.Magnus.CommandSystem
                 return new[]
                     { "Invalid Z value" };
             }
-            
-            go.transform.Rotate(x, y, z);
 
-            var eulerAngles = go.transform.eulerAngles;
+            var eulerAngles = new Vector3(x, y, z);
+            go.transform.eulerAngles = eulerAngles;
             return new[] { $"Rotated {go.name} to ({eulerAngles.x}, {eulerAngles.y}, {eulerAngles.z})" };
         }
     }
