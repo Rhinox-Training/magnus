@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Rhinox.GUIUtils;
+using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Collections;
+using UnityEditor;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
@@ -15,14 +17,18 @@ namespace Rhinox.Magnus.CommandSystem
         private string _currentCommand;
         private bool _justOpened;
 
+        private ICollection<IConsoleCommand> _suggestions = new List<IConsoleCommand>();
+        private const int SUGGESTIONS_SIZE_LIMIT = 4;
+        private const int SUGGESTION_WINDOW_ID = 150151;
+        private const int SUGGESTION_MAX_WINDOW_HEIGHT = 80;
+
         private const int WINDOW_WIDTH = 450;
         private const int WINDOW_HEIGHT = 300;
-        
-        
+
         private LimitedQueue<string> _outputHistory;
         private const int HISTORY_LIMIT_LINES = 500;
         private const int HISTORY_VIEW_SIZE = 10;
-        
+
         private int _viewOffset = 0;
         private Vector2 _scrollPosition;
         private LimitedQueue<string> _commandHistory;
@@ -30,8 +36,7 @@ namespace Rhinox.Magnus.CommandSystem
 
         private const int UNIQUE_WINDOW_ID = 1597368;
         private const string INPUT_FIELD_NAME = "input";
-        
-        
+
         private int _pickPreviousCommand;
         private int _renderedCountOutput;
 
@@ -56,14 +61,42 @@ namespace Rhinox.Magnus.CommandSystem
             if (_visible)
                 _justOpened = true;
         }
-        
+
         void OnGUI()
         {
             if (_visible)
             {
+                var backgroundColor = GUI.backgroundColor;
+
+                GUI.backgroundColor = Color.gray;
+                
                 // draw dialog
-                GUILayout.Window(UNIQUE_WINDOW_ID, new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT), 
-                    OnDrawWindow, GUIContent.none, ConsoleGUIStyles.ConsoleBackgroundStyle);
+                GUILayout.Window(UNIQUE_WINDOW_ID,
+                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT),
+                    OnDrawWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
+
+                // If there are no suggestions, return
+                if (_suggestions.IsNullOrEmpty())
+                {
+                    GUI.backgroundColor = backgroundColor;
+                    return;
+                }
+
+                // Calculate the appropriate height of the suggestion window
+                float height;
+                if (_suggestions.Count <= SUGGESTIONS_SIZE_LIMIT)
+                    height = _suggestions.Count * (SUGGESTION_MAX_WINDOW_HEIGHT / (float)SUGGESTIONS_SIZE_LIMIT);
+                else
+                    height = SUGGESTION_MAX_WINDOW_HEIGHT;
+
+
+                GUI.backgroundColor = Color.black;
+                // draw suggestions
+                GUILayout.Window(SUGGESTION_WINDOW_ID,
+                    new Rect(0, Screen.height - height - 20, WINDOW_WIDTH / 2f, height),
+                    OnDrawSuggestionWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
+                
+                GUI.backgroundColor = backgroundColor;
             }
         }
 
@@ -76,7 +109,6 @@ namespace Rhinox.Magnus.CommandSystem
                 if ( /*Event.current.keyCode == KeyCode.Escape || */ // TODO: escape gives weird open close behaviour
                     Event.current.keyCode == ConsoleCommandManager.OPEN_KEY)
                 {
-
                     GUI.FocusControl(string.Empty);
                     _visible = false;
                     return; // no point in continuing if closed
@@ -96,13 +128,13 @@ namespace Rhinox.Magnus.CommandSystem
                 // we look if the event occured while the focus was in our input element
                 if (GUI.GetNameOfFocusedControl() == INPUT_FIELD_NAME && Event.current.keyCode == KeyCode.Return)
                 {
+                    _suggestions.Clear();
                     SubmitInputValue();
                     return;
                 }
             }
-            
-            
-            
+
+
             //else
             {
                 GUILayout.BeginVertical(ConsoleGUIStyles.ToolbarButtonStyle);
@@ -111,7 +143,8 @@ namespace Rhinox.Magnus.CommandSystem
                     if (_outputHistory != null)
                     {
                         if (_renderedCountOutput != _outputHistory.Count)
-                            _scrollPosition.y = _outputHistory.Count * 40; // Forces to end fully while history is not at capacity
+                            _scrollPosition.y =
+                                _outputHistory.Count * 40; // Forces to end fully while history is not at capacity
                         _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, true,
                             GUILayout.Height(WINDOW_HEIGHT - 40), GUILayout.ExpandHeight(true));
                         GUILayout.BeginVertical();
@@ -132,8 +165,12 @@ namespace Rhinox.Magnus.CommandSystem
                     }
 
                     GUI.SetNextControlName(INPUT_FIELD_NAME);
-                    _currentCommand = GUILayout.TextField(_currentCommand);
-                    
+                    var newCommandText = GUILayout.TextField(_currentCommand);
+                    if (newCommandText != _currentCommand)
+                        _suggestions = (ConsoleCommandManager.Instance.GetSuggestions(newCommandText));
+
+                    _currentCommand = newCommandText;
+
                     if (_justOpened && _currentCommand.StartsWith("`"))
                     {
                         _currentCommand = _currentCommand.Substring(1);
@@ -148,15 +185,25 @@ namespace Rhinox.Magnus.CommandSystem
                 GUI.FocusControl(INPUT_FIELD_NAME);
         }
 
+        private void OnDrawSuggestionWindow(int windowID)
+        {
+            GUILayout.BeginVertical();
+
+            foreach (IConsoleCommand entry in _suggestions)
+                GUILayout.Label(entry.CommandName, ConsoleGUIStyles.ConsoleLabelStyle);
+
+            GUILayout.EndVertical();
+        }
+
         private void SubmitInputValue()
         {
             // do not proceed if empty
             if (string.IsNullOrWhiteSpace(_currentCommand))
                 return;
-            
+
             var sendCommand = _currentCommand.Trim();
             ConsoleCommandManager.Instance.ExecuteCommand(sendCommand);
-            
+
             _commandHistory.Enqueue(sendCommand);
 
             ResetElements();
@@ -173,11 +220,11 @@ namespace Rhinox.Magnus.CommandSystem
             _outputHistory.Enqueue(output);
             _scrollPosition.y = _outputHistory.Count * 40; // Forces almost to end
         }
-        
+
         private void UpdateView(bool forceToEnd = false)
         {
             var historyTexts = new List<string>();
-            
+
             for (int i = HISTORY_VIEW_SIZE - 1; i >= 0; --i)
             {
                 int readIndex = _viewOffset + i;
@@ -219,9 +266,9 @@ namespace Rhinox.Magnus.CommandSystem
             if (_pickPreviousCommand != -1)
                 _currentCommand = _commandHistory.ElementAt(_commandHistory.Count - 1 - _pickPreviousCommand);
         }
-        
-    #region RuntimeGUIStyles
-        
-    #endregion
+
+        #region RuntimeGUIStyles
+
+        #endregion
     }
 }
