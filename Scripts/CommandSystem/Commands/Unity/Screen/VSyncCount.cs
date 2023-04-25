@@ -9,6 +9,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class VSyncCount: IConsoleCommand
     {
         public string CommandName => "vsync-count";
+        public string Syntax => "vsync-count <count>";
+
         public string[] Execute(string[] args)
         {
             if (args.IsNullOrEmpty())

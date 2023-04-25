@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rhinox.GUIUtils;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Collections;
-using UnityEditor;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
@@ -51,7 +49,7 @@ namespace Rhinox.Magnus.CommandSystem
 
             GUIStyle defaultLabelStyle = ConsoleGUIStyles.ConsoleLabelStyle;
             _labelHeight =
-                defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), EditorGUIUtility.currentViewWidth);
+                defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), WINDOW_WIDTH);
         }
 
         private void Start()
