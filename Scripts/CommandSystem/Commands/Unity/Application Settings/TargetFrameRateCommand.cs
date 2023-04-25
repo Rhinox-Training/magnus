@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    [CommandInfo("Sets the target frame rate", "Application Settings")]
+    [CommandInfo("Sets the target frame rate", "Application")]
     public class TargetFrameRateCommand:IConsoleCommand
     {
         public string CommandName => "target-frame-rate";
