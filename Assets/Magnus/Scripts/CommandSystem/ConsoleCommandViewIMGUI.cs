@@ -39,6 +39,7 @@ namespace Rhinox.Magnus.CommandSystem
         private int _pickPreviousCommand;
         private int _renderedCountOutput;
         private float _labelHeight;
+        private float _textFieldSize;
 
         private void Awake()
         {
@@ -51,6 +52,8 @@ namespace Rhinox.Magnus.CommandSystem
             GUIStyle defaultLabelStyle = ConsoleGUIStyles.ConsoleLabelStyle;
             _labelHeight =
                 defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), WINDOW_WIDTH);
+            GUIStyle textFieldStyle = new GUIStyle("textField");
+            _textFieldSize = textFieldStyle.CalcHeight(new GUIContent("This is a sample text field"), WINDOW_WIDTH);
         }
 
         private void Start()
@@ -97,7 +100,7 @@ namespace Rhinox.Magnus.CommandSystem
 
                 // draw suggestions
                 GUILayout.Window(SUGGESTION_WINDOW_ID,
-                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, height),
+                    new Rect(0, Screen.height - 1.25f * _textFieldSize - height, WINDOW_WIDTH, height),
                     OnDrawSuggestionWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
 
                 //Reset the background color
@@ -176,13 +179,13 @@ namespace Rhinox.Magnus.CommandSystem
 
                     GUI.SetNextControlName(INPUT_FIELD_NAME);
 
-                    string newCommandText = GUILayout.TextField(_currentCommand);
-                    
+                    string newCommandText = GUILayout.TextField(_currentCommand, GUILayout.Height(_textFieldSize));
+
                     // Get the suggestions, if new text was entered
                     if (newCommandText != _currentCommand)
                         _suggestions = (ConsoleCommandManager.Instance.GetSuggestions(newCommandText));
                     _currentCommand = newCommandText;
-                    
+
                     // Move the cursor of the text field to the end, if desired
                     if (_moveCursorToEnd)
                     {
@@ -192,7 +195,7 @@ namespace Rhinox.Magnus.CommandSystem
                             (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
                         editor.MoveCursorToPosition(new Vector2(9999, 9999));
                     }
-                    
+
                     if (_justOpened && _currentCommand.StartsWith("`"))
                     {
                         _currentCommand = _currentCommand.Substring(1);
