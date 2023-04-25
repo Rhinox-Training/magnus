@@ -8,7 +8,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class FindGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "find";
-        
+        public override string Syntax => "find <name>";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             return new [] { $"{PrintObjectFullname(go)}",

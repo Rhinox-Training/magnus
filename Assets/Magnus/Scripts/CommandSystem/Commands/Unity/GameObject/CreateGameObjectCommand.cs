@@ -9,6 +9,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class CreateGameObjectCommand : IConsoleCommand
     {
         public string CommandName => "create";
+        public string Syntax => "create <name> [<component1> <component2> ...]";
 
         public string[] Execute(string[] args)
         {

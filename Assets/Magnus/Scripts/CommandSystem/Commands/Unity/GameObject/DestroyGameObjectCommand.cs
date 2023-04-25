@@ -7,7 +7,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class DestroyGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "destroy";
-        
+        public override string Syntax => "destroy <GameObject>";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             string outputName = PrintObjectFullname(go);

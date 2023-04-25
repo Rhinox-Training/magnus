@@ -8,10 +8,12 @@ namespace Rhinox.Magnus.CommandSystem
     public class RenameGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "rename";
+        public override string Syntax =>"rename <GameObject name> <new name>";
+
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
             if(args.IsNullOrEmpty())
-                return new[] { "Command syntax is: rename <GameObject name> <new name>" };
+                return new[] { $"Command syntax is: {Syntax}" };
             string oldName = go.name;
             string newName = args.First();
             go.name = newName;

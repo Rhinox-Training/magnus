@@ -46,6 +46,7 @@ namespace Rhinox.Magnus.Editor
         [ListDrawerSettings(Expanded = true, DraggableItems = true, CustomAddFunction = "OnAddScene")]
         [CustomValueDrawer("OnDrawScenes")]
         [CustomContextMenu("Import Scenes from Build Settings", nameof(UseScenesFromBuildSettings))]
+        [SerializeReference]
         public SceneReferenceData[] Scenes;
         
         [PropertyTooltip("$OutputFormatTooltip")]
