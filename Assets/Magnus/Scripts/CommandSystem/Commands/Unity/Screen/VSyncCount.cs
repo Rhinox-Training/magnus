@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    [CommandInfo("Sets the vsync count", "Application Settings")]
+    [CommandInfo("Sets the vsync count", "Screen")]
     public class VSyncCount: IConsoleCommand
     {
         public string CommandName => "vsync-count";
