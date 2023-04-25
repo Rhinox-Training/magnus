@@ -11,10 +11,10 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
-            if (args.IsNullOrEmpty())
+            if (HasCommandSystemSecretConfigured() && args.IsNullOrEmpty())
                 return new[] { "Missing argument: <developer token>" };
 
-            string devToken = args.First();
+            string devToken = args.FirstOrDefault();
             if (CheckWithSecret(devToken))
             {
                 ConsoleCommandManager.Instance.EnableGUIAccess();
@@ -26,15 +26,21 @@ namespace Rhinox.Magnus.CommandSystem
 
         private bool CheckWithSecret(string devToken)
         {
-            var secret = MagnusProjectSettings.Instance.CommandSystemSecret;
-            if (string.IsNullOrWhiteSpace(secret)) // Always allow if no secret was configured
+            if (!HasCommandSystemSecretConfigured()) // Always allow if no secret was configured
                 return true;
 
             if (string.IsNullOrWhiteSpace(devToken))
                 return false;
             
+            var secret = MagnusProjectSettings.Instance.CommandSystemSecret;
             secret = secret.Trim();
             return secret.Equals(devToken.Trim());
+        }
+
+        private static bool HasCommandSystemSecretConfigured()
+        {
+            var secret = MagnusProjectSettings.Instance.CommandSystemSecret;
+            return !string.IsNullOrWhiteSpace(secret);
         }
     }
 }
