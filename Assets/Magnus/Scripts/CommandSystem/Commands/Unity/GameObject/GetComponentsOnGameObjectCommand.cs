@@ -8,6 +8,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class GetComponentsOnGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "get-components";
+        public override string Syntax => "get-components <include-children: true/false>";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {

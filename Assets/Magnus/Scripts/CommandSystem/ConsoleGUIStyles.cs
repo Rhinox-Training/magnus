@@ -1,28 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class ConsoleGUIStyles
 {
-    private static GUIStyle _consoleBackgroundStyle;
+    private static GUIStyle _boxStyle;
 
-    public static GUIStyle ConsoleBackgroundStyle
+    public static GUIStyle BoxStyle
     {
         get
         {
-            if (_consoleBackgroundStyle == null)
+            if (_boxStyle == null)
             {
-                _consoleBackgroundStyle = new GUIStyle("Box")
+                _boxStyle = new GUIStyle()
                 {
                     overflow = new RectOffset(0, 0, 0, 0),
                     margin = new RectOffset(0, 0, 0, 0),
-                    padding = new RectOffset(0, 0, 0, 0)
+                    padding = new RectOffset(0, 0, 0, 0),
+                    normal =
+                    {
+                        background = EditorGUIUtility.whiteTexture
+                    }
                 };
             }
-            return _consoleBackgroundStyle;
+
+            return _boxStyle;
         }
     }
-    
+
+
     private static GUIStyle _toolbarButtonStyle;
 
     public static GUIStyle ToolbarButtonStyle
@@ -38,8 +45,8 @@ public static class ConsoleGUIStyles
                     padding = new RectOffset(0, 0, 0, 0)
                 };
             }
+
             return _toolbarButtonStyle;
-            
         }
     }
 
@@ -60,7 +67,6 @@ public static class ConsoleGUIStyles
             }
 
             return _consoleLabelStyle;
-
         }
     }
 }

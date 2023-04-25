@@ -6,6 +6,8 @@ namespace Rhinox.Magnus.CommandSystem
     public abstract class BaseServiceConsoleCommand : IConsoleCommand
     {
         public abstract string CommandName { get; }
+        public abstract string Syntax { get; }
+
         public string[] Execute(string[] args)
         {
             if (args.IsNullOrEmpty())

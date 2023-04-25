@@ -10,6 +10,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class RemoveComponentFromGameObjectCommand : BaseGameObjectConsoleCommand
     {
         public override string CommandName => "remove-components";
+        public override string Syntax =>"remove-components <gameObject name> [<component1 name> <component2 name> ...]";
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
@@ -17,7 +18,7 @@ namespace Rhinox.Magnus.CommandSystem
             {
                 return new string[]
                 {
-                    "Command format is: remove-components <gameObject name> <component1 name> <component2 name> ..."
+                    $"Command format is: {Syntax}"
                 };
             }
 
