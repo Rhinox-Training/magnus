@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
+    [CommandInfo("Quits the application.","Application")]
     public class QuitCommand : IConsoleCommand
     {
         public string CommandName => "quit";

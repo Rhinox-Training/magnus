@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Rhinox.Lightspeed;
-using Rhinox.Magnus.CommandSystem;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    [CommandInfo("Changes the TimeScale of the game", "Application Settings")]
+    [CommandInfo("Changes the TimeScale of the game", "Application")]
     public class TimeScaleCommand : IConsoleCommand
     {
         public string CommandName => "time-scale";

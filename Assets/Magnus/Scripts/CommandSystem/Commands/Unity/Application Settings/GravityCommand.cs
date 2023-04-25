@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
 {
-    [CommandInfo("Sets the gravity of the application", "Application Settings")]
+    [CommandInfo("Sets the gravity of the application", "Application")]
     public class GravityCommand:IConsoleCommand
     {
         public string CommandName => "gravity";
