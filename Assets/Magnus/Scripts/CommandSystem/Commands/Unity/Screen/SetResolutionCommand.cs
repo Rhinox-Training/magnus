@@ -7,6 +7,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class SetResolutionCommand : IConsoleCommand
     {
         public string CommandName => "set-resolution";
+        public string Syntax => "set-resolution <x> <y>";
 
         public string[] Execute(string[] args)
         {

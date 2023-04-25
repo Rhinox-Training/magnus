@@ -9,6 +9,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class FullScreenModeCommand: IConsoleCommand
     {
         public string CommandName => "full-screen-mode";
+        public string Syntax => "full-screen-mode <mode>";
+
         public string[] Execute(string[] args)
         {
             if(args.IsNullOrEmpty())

@@ -8,6 +8,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class GravityCommand:IConsoleCommand
     {
         public string CommandName => "gravity";
+        public string Syntax => "gravity <x> <y> <z>";
+
         public string[] Execute(string[] args)
         {
             if(args.IsNullOrEmpty())

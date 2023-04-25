@@ -8,6 +8,8 @@ namespace Rhinox.Magnus.CommandSystem
     public class TargetFrameRateCommand:IConsoleCommand
     {
         public string CommandName => "target-frame-rate";
+        public string Syntax => $"{CommandName} <frame-rate>";
+
         public string[] Execute(string[] args)
         {
             if(args.IsNullOrEmpty())

@@ -11,6 +11,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class TimeScaleCommand : IConsoleCommand
     {
         public string CommandName => "time-scale";
+        public string Syntax => "time-scale <scale>";
 
         public string[] Execute(string[] args)
         {

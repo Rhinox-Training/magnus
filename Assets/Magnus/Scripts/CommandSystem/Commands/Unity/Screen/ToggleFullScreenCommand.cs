@@ -7,6 +7,7 @@ namespace Rhinox.Magnus.CommandSystem
     public class ToggleFullScreenCommand : IConsoleCommand
     {
         public string CommandName => "toggle-full-screen";
+        public string Syntax => CommandName;
 
         public string[] Execute(string[] args)
         {
