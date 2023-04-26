@@ -280,5 +280,12 @@ namespace Rhinox.Magnus.CommandSystem
         #region RuntimeGUIStyles
 
         #endregion
+
+        public void Clear()
+        {
+            _commandHistory.Clear();
+            _outputHistory.Clear();
+            _suggestions.Clear();
+        }
     }
 }

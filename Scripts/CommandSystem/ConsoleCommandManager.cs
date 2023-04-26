@@ -248,5 +248,11 @@ namespace Rhinox.Magnus.CommandSystem
                 return;
             _guiAccessEnabled = true;
         }
+
+        public void ClearConsole()
+        {
+            _commandViewIMGUI?.Clear();
+            
+        }
     }
 }
