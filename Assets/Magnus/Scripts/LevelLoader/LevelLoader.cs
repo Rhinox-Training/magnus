@@ -151,6 +151,12 @@ namespace Rhinox.Magnus
         /// <param name="sceneRequestString">Scene name or path</param>
         public void LoadScene(string sceneRequestString)
         {
+            if (!IsConfiguredAndEnabled())
+            {
+                PLog.Warn<MagnusLogger>("LevelLoader not configured correctly in Project Settings");
+                return;
+            }
+            
             if (_runningLoad)
             {
                 PLog.Error<MagnusLogger>($"Can't transition to new scene, load is still running...");
@@ -182,6 +188,11 @@ namespace Rhinox.Magnus
         
         public void LoadScene(LevelDefinitionData scene)
         {
+            if (!IsConfiguredAndEnabled())
+            {
+                PLog.Warn<MagnusLogger>("LevelLoader not configured correctly in Project Settings");
+                return;
+            }
             if (_runningLoad)
             {
                 PLog.Error<MagnusLogger>($"Can't transition to new scene, load is still running...");
@@ -201,6 +212,11 @@ namespace Rhinox.Magnus
 
         public void LoadScene(int buildIndex)
         {
+            if (!IsConfiguredAndEnabled())
+            {
+                PLog.Warn<MagnusLogger>("LevelLoader not configured correctly in Project Settings");
+                return;
+            }
             if (_runningLoad)
             {
                 PLog.Error<MagnusLogger>($"Can't transition to new scene, load is still running...");
@@ -220,6 +236,11 @@ namespace Rhinox.Magnus
         
         public void ReloadScene()
         {
+            if (!IsConfiguredAndEnabled())
+            {
+                PLog.Warn<MagnusLogger>("LevelLoader not configured correctly in Project Settings");
+                return;
+            }
             if (_runningLoad)
             {
                 PLog.Error<MagnusLogger>($"Can't transition to new scene, load is still running...");
@@ -275,7 +296,7 @@ namespace Rhinox.Magnus
         }
 
         private IEnumerator GoToLevelLoadingArea(bool skipTransition, bool changingActiveScene)
-        {
+        { 
             LevelLoadingArea area = Object.FindObjectsOfType<LevelLoaderAreaOverride>()
                 .FirstOrDefault(x => x.gameObject.scene.path.Equals(_scenePathTransitionTarget))
                 ?.Area;
@@ -283,6 +304,7 @@ namespace Rhinox.Magnus
             if (area == null)
                 area = MagnusProjectSettings.Instance.LoadingScenePrefab;
             
+            // Attempts instantiate even if are is still null?
             if (_activeArea == null)
                 _activeArea = Object.Instantiate(area, _offworldLocation, Quaternion.identity, transform);
             
@@ -739,7 +761,7 @@ namespace Rhinox.Magnus
         }
         
         // TODO: port to Rhinox.Utilities
-        private static string GetScenePathByName(string name)
+        public static string GetScenePathByName(string name)
         {
             int i = 0;
             string sceneName = "FOOBAR";
