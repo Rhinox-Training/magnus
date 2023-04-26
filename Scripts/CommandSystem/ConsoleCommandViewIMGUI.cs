@@ -51,7 +51,7 @@ namespace Rhinox.Magnus.CommandSystem
 
             GUIStyle defaultLabelStyle = ConsoleGUIStyles.ConsoleLabelStyle;
             _labelHeight =
-                defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), EditorGUIUtility.currentViewWidth);
+                defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), WINDOW_WIDTH);
         }
 
         private void Start()

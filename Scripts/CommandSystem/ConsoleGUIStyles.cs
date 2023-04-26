@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class ConsoleGUIStyles
 {
@@ -20,7 +17,7 @@ public static class ConsoleGUIStyles
                     padding = new RectOffset(0, 0, 0, 0),
                     normal =
                     {
-                        background = EditorGUIUtility.whiteTexture
+                        background = Texture2D.whiteTexture
                     }
                 };
             }
