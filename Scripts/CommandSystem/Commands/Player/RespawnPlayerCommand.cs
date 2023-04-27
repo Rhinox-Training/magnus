@@ -11,36 +11,32 @@ namespace Rhinox.Magnus.CommandSystem.Player
 
         public string[] Execute(string[] args)
         {
-            if (args.IsNullOrEmpty())
-            {
-                PlayerManager.Instance.RespawnPlayer();
-                return new[] { "Player respawned." };
-            }
+            if (PlayerManager.Instance == null)
+                return new[] { "No player manager found" };
 
-            if (!UnityTypeParser.TryParseVector3(args[0], out Vector3 position))
+            Vector3 position = Vector3.zero;
+            Vector3 eulerAngles = Vector3.zero;
+            bool persistent = false;
+            Quaternion rotation;
+
+            // If there are arguments, attempt to parse them according to the amount of arguments
+            // (See Syntax)
+            if (args.Length > 0 && !UnityTypeParser.TryParseVector3(args[0], out position))
                 return new[] { "Unable to parse position, format is x,y,z" };
 
-            if (args.Length == 1)
-            {
-                PlayerManager.Instance.RespawnPlayer(position);
-                return new[] { $"Player respawned at position {position}" };
-            }
-
-            if (!UnityTypeParser.TryParseVector3(args[1], out Vector3 rotation))
+            if (args.Length > 1 && !UnityTypeParser.TryParseVector3(args[1], out eulerAngles))
                 return new[] { "Unable to parse rotation, format is x,y,z" };
-            Quaternion rot = Quaternion.Euler(rotation);
-
-            if (args.Length == 2)
-            {
-                PlayerManager.Instance.RespawnPlayer(position, rot);
-                return new[] { $"Player respawned at position {position}, with rotation {rotation}" };
-            }
-
-            if (!bool.TryParse(args[2], out bool persistent))
-                return new[] { "Unable to parse persistent, format is true/false" };
             
-            PlayerManager.Instance.RespawnPlayer(position, rot, persistent);
-            return new[] { $"Player respawned at position {position}, with rotation {rotation}, and persistent {persistent}" };
+            rotation = Quaternion.Euler(eulerAngles);
+
+            if (args.Length > 2 && !bool.TryParse(args[2], out persistent))
+                return new[] { "Unable to parse persistent, format is true/false" };
+
+            PlayerManager.Instance.RespawnPlayer(position, rotation, persistent);
+            return new[]
+            {
+                $"Player respawned at position {position}, with rotation {eulerAngles}, and persistent {persistent}"
+            };
         }
     }
 }

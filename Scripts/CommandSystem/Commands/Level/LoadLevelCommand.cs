@@ -14,8 +14,12 @@ namespace Rhinox.Magnus.CommandSystem
             
             if(!int.TryParse(args[0], out int sceneIndex))
                 return new[] { $"Scene index must be an integer: {args[0]}" };
-            
-            LevelLoader.Instance.LoadScene(sceneIndex);
+
+            LevelLoader loader = LevelLoader.Instance;
+            if(loader == null)
+                return new[] { "No level loader found" };
+
+            loader.LoadScene(sceneIndex);
             return new[] { $"Attempting to load scene {sceneIndex}" };
         }
     }

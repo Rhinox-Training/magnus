@@ -11,25 +11,18 @@ namespace Rhinox.Magnus.CommandSystem
 
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
+            if(LayerManager.Instance == null)
+                return new[] { "LayerManager not found." };
+            
             if (args.IsNullOrEmpty())
                 return new[] { "Missing argument <layer>" };
             
-            // Check if the given string is an integer
-            if (int.TryParse(args[0], out int layerIdx))
-            {
-                // Check if the layerIdx is in the range of the layer mask
-                if (layerIdx < 0 || layerIdx >= 31)
-                    return new[] { $"LayerIndex '{args[0]}' is not valid. Should be in the range [0;31]." };
-            }
-            else
-                layerIdx = LayerMask.NameToLayer(args[0]);
-
-            if (layerIdx == -1)
-                return new[] { $"Layer '{args[0]}' not found." };
+            if(!UnityTypeParser.TryParseLayer(args[0], out var layerIdx))
+                return new[] { $"Unable to parse layer from {args[0]}" };
 
             LayerManager.Instance.SetLayer(go, layerIdx);
 
-            return new[] { $"Layer of {go.name} set to {layerIdx}" };
+            return new[] { $"Layer of {go.name} set to {layerIdx}: {LayerMask.LayerToName(layerIdx)}" };
         }
     }
 }
