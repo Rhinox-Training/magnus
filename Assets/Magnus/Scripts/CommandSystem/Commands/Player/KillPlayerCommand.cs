@@ -8,7 +8,11 @@
 
         public string[] Execute(string[] args)
         {
-            PlayerManager.Instance.KillPlayer();
+            var playerManager = PlayerManager.Instance;
+            if(playerManager == null)
+                return new[] { "No Player Manager found." };
+            
+            playerManager.KillPlayer();
             return new[] { "Player killed." };
         }
     }

@@ -11,6 +11,9 @@ namespace Rhinox.Magnus.CommandSystem
         
         protected override string[] ExecuteFor(GameObject go, string[] args)
         {
+            if (LayerManager.Instance == null)
+                return new[] { "LayerManager not found." };
+            
             if(args.IsNullOrEmpty())
                 return new[] { "Missing argument <layer>" };
 

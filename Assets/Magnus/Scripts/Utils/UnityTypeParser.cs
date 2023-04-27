@@ -55,10 +55,51 @@ namespace Rhinox.Magnus
                 !float.TryParse(values[2], out float z) ||
                 !float.TryParse(values[3], out float w))
                 return false;
-            
+
             // Set the result
             result = new Quaternion(x, y, z, w);
             return true;
+        }
+
+        /// <summary>
+        /// Tries to parse a layer from a given string. The string can either be the name of the layer or the index.
+        /// </summary>
+        /// <param name="input">The input string representing either the name or the index of the layer.</param>
+        /// <param name="layer">The output layer number if the input is valid, otherwise -1.</param>
+        /// <returns>True if the input is valid and a layer is parsed, otherwise false.</returns>
+        public static bool TryParseLayer(string input, out int layer)
+        {
+            layer = -1;
+
+            if (int.TryParse(input, out int layerIndex))
+            {
+                if (IsValidLayerIndex(layerIndex))
+                {
+                    layer = layerIndex;
+                    return true;
+                }
+            }
+            else
+            {
+                int layerId = LayerMask.NameToLayer(input);
+                if (IsValidLayerIndex(layerId))
+                {
+                    layer = layerId;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the layer index is valid.
+        /// </summary>
+        /// <param name="layerIndex">The layer index to be checked.</param>
+        /// <returns>True if the layer index is valid, otherwise false.</returns>
+        private static bool IsValidLayerIndex(int layerIndex)
+        {
+            return layerIndex >= 0 && layerIndex < 32;
         }
     }
 }

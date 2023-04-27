@@ -115,3 +115,17 @@ MonoBehaviour:
         _assemblyQualifiedName: Rhinox.Magnus.LayerManager, com.rhinox.open.magnus,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         _name: LayerManager
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.CameraInfo, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: CameraInfo
+      _servicePriority: 0
+      ServiceType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.CameraInfo, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: CameraInfo
