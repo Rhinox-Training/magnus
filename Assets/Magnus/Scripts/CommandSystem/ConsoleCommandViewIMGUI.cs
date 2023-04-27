@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rhinox.GUIUtils;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Collections;
-using UnityEditor;
 using UnityEngine;
 
 namespace Rhinox.Magnus.CommandSystem
@@ -16,6 +14,7 @@ namespace Rhinox.Magnus.CommandSystem
         private string[] _historyTexts;
         private string _currentCommand;
         private bool _justOpened;
+        private bool _moveCursorToEnd;
 
         private ICollection<IConsoleCommand> _suggestions = new List<IConsoleCommand>();
         private const int SUGGESTIONS_SIZE_LIMIT = 4;
@@ -40,6 +39,7 @@ namespace Rhinox.Magnus.CommandSystem
         private int _pickPreviousCommand;
         private int _renderedCountOutput;
         private float _labelHeight;
+        private float _textFieldSize;
 
         private void Awake()
         {
@@ -52,6 +52,8 @@ namespace Rhinox.Magnus.CommandSystem
             GUIStyle defaultLabelStyle = ConsoleGUIStyles.ConsoleLabelStyle;
             _labelHeight =
                 defaultLabelStyle.CalcHeight(new GUIContent("Sample Label"), WINDOW_WIDTH);
+            GUIStyle textFieldStyle = new GUIStyle("textField");
+            _textFieldSize = textFieldStyle.CalcHeight(new GUIContent("This is a sample text field"), WINDOW_WIDTH);
         }
 
         private void Start()
@@ -95,10 +97,10 @@ namespace Rhinox.Magnus.CommandSystem
                     height = SUGGESTIONS_SIZE_LIMIT * _labelHeight;
 
                 GUI.backgroundColor = Color.black;
-                
+
                 // draw suggestions
                 GUILayout.Window(SUGGESTION_WINDOW_ID,
-                    new Rect(0, Screen.height - WINDOW_HEIGHT, WINDOW_WIDTH, height),
+                    new Rect(0, Screen.height - 1.25f * _textFieldSize - height, WINDOW_WIDTH, height),
                     OnDrawSuggestionWindow, GUIContent.none, ConsoleGUIStyles.BoxStyle);
 
                 //Reset the background color
@@ -130,6 +132,11 @@ namespace Rhinox.Magnus.CommandSystem
                     GetPreviousCommandDown();
                     return; // Swallow
                 }
+                else if (Event.current.keyCode == KeyCode.Tab)
+                {
+                    AutoCompleteSuggestion();
+                }
+
 
                 // we look if the event occured while the focus was in our input element
                 if (GUI.GetNameOfFocusedControl() == INPUT_FIELD_NAME && Event.current.keyCode == KeyCode.Return)
@@ -171,11 +178,23 @@ namespace Rhinox.Magnus.CommandSystem
                     }
 
                     GUI.SetNextControlName(INPUT_FIELD_NAME);
-                    var newCommandText = GUILayout.TextField(_currentCommand);
+
+                    string newCommandText = GUILayout.TextField(_currentCommand, GUILayout.Height(_textFieldSize));
+
+                    // Get the suggestions, if new text was entered
                     if (newCommandText != _currentCommand)
                         _suggestions = (ConsoleCommandManager.Instance.GetSuggestions(newCommandText));
-
                     _currentCommand = newCommandText;
+
+                    // Move the cursor of the text field to the end, if desired
+                    if (_moveCursorToEnd)
+                    {
+                        _moveCursorToEnd = false;
+                        GUI.FocusControl(INPUT_FIELD_NAME);
+                        TextEditor editor =
+                            (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
+                        editor.MoveCursorToPosition(new Vector2(9999, 9999));
+                    }
 
                     if (_justOpened && _currentCommand.StartsWith("`"))
                     {
@@ -189,6 +208,14 @@ namespace Rhinox.Magnus.CommandSystem
             // in case nothing else if focused, focus our input
             if (GUI.GetNameOfFocusedControl() == string.Empty)
                 GUI.FocusControl(INPUT_FIELD_NAME);
+        }
+
+        private void AutoCompleteSuggestion()
+        {
+            if (_suggestions.Count == 0)
+                return;
+            _currentCommand = _suggestions.First().CommandName;
+            _moveCursorToEnd = true;
         }
 
         private void OnDrawSuggestionWindow(int windowID)
@@ -276,10 +303,6 @@ namespace Rhinox.Magnus.CommandSystem
             if (_pickPreviousCommand != -1)
                 _currentCommand = _commandHistory.ElementAt(_commandHistory.Count - 1 - _pickPreviousCommand);
         }
-
-        #region RuntimeGUIStyles
-
-        #endregion
 
         public void Clear()
         {
