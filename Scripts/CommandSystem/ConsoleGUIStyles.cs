@@ -59,7 +59,8 @@ public static class ConsoleGUIStyles
                 {
                     overflow = new RectOffset(0, 0, 0, 0),
                     margin = new RectOffset(0, 0, 0, 0),
-                    padding = new RectOffset(0, 0, 0, 0)
+                    padding = new RectOffset(0, 0, 0, 0),
+                    normal = { textColor = Color.white }
                 };
             }
 
