@@ -129,3 +129,18 @@ MonoBehaviour:
         _assemblyQualifiedName: Rhinox.Magnus.CameraInfo, com.rhinox.open.magnus,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         _name: CameraInfo
+    - Toggled: 1
+      _baseType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.GraphyService, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: GraphyService
+      _servicePriority: 0
+      ServiceType:
+        _assemblyName: com.rhinox.open.magnus, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        _assemblyQualifiedName: Rhinox.Magnus.GraphyService, com.rhinox.open.magnus,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _name: GraphyService
+  GraphyPrefab: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}

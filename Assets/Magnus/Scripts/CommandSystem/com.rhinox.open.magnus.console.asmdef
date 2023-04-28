@@ -15,6 +15,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.tayx.graphy",
+            "expression": "3.0.2",
+            "define": "USING_GRAPHY"
+        }
+    ],
     "noEngineReferences": false
 }

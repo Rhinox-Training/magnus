@@ -26,6 +26,7 @@ MonoBehaviour:
     m_Scopes:
     - com.rhinox.open
     - nl.elraccoone
+    - com.tayx.graphy
     m_IsDefault: 0
   m_UserSelectedRegistryName: OpenUPM
   m_UserAddingNewScopedRegistry: 0
@@ -38,6 +39,7 @@ MonoBehaviour:
       m_Scopes:
       - com.rhinox.open
       - nl.elraccoone
+      - com.tayx.graphy
       m_IsDefault: 0
     m_Modified: 0
     m_Name: OpenUPM
@@ -45,4 +47,5 @@ MonoBehaviour:
     m_Scopes:
     - com.rhinox.open
     - nl.elraccoone
+    - com.tayx.graphy
     m_SelectedScopeIndex: 0
