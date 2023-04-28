@@ -303,5 +303,12 @@ namespace Rhinox.Magnus.CommandSystem
             if (_pickPreviousCommand != -1)
                 _currentCommand = _commandHistory.ElementAt(_commandHistory.Count - 1 - _pickPreviousCommand);
         }
+
+        public void Clear()
+        {
+            _commandHistory.Clear();
+            _outputHistory.Clear();
+            _suggestions.Clear();
+        }
     }
 }

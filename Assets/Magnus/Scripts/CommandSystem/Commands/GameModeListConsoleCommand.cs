@@ -10,6 +10,9 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
+            if(GameModeManager.Instance == null)
+                return new[] { "GameModeManager not found." };
+            
             return new[] { string.Join(", ", GameModeManager.Instance.GetModeNames()) };
         }
     }

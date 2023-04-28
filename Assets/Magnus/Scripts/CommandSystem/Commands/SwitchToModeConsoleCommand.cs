@@ -12,6 +12,9 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
+            if (GameModeManager.Instance == null)
+                return new[] { "GameModeManager not found." };
+            
             if (args.IsNullOrEmpty())
                 return new[] { "Missing argument: <mode name>" };
             string modeName = args.First();
