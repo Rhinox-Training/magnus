@@ -29,12 +29,9 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
-            
-#if UNITY_STANDALONE_WIN
+#if !UNITY_STANDALONE_WIN
             return new[] { "Only supported on Windows standalone" };
-#endif
-
-
+#else
             if (args.IsNullOrEmpty())
             {
                 return new[] { $"Syntax is: {Syntax}" };
@@ -44,6 +41,7 @@ namespace Rhinox.Magnus.CommandSystem
             int y = int.Parse(args[1]);
             SetPosition(x, y);
             return new[] { $"set-screen-position {x} {y}" };
+#endif
         }
     }
 }
