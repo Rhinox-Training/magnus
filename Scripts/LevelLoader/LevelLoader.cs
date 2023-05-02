@@ -134,7 +134,7 @@ namespace Rhinox.Magnus
             
             PLog.Info<MagnusLogger>("[OnSceneLoaded] LevelLoader first run, start up initial scene transition");
             _runningLoad = true;
-            var coroutine = new ManagedCoroutine(HandleLoading());
+            ManagedCoroutine.Begin(HandleLoading());
 
             return true;
         }
@@ -183,7 +183,7 @@ namespace Rhinox.Magnus
             }
             
             _runningLoad = true;
-            var coroutine = new ManagedCoroutine(LoadLevelAsync(scenePath));
+            ManagedCoroutine.Begin(LoadLevelAsync(scenePath));
         }
         
         public void LoadScene(LevelDefinitionData scene)
@@ -204,10 +204,9 @@ namespace Rhinox.Magnus
                 PLog.Error<MagnusLogger>($"Can't transition to new scene, LevelDefinitionData is null...");
                 return;
             }
-            // TODO:
-            // ^ why empty todo?
+            
             _runningLoad = true;
-            var coroutine = new ManagedCoroutine(LoadLevelAsync(scene));
+            ManagedCoroutine.Begin(LoadLevelAsync(scene));
         }
 
         public void LoadScene(int buildIndex)
@@ -231,7 +230,7 @@ namespace Rhinox.Magnus
             }
             
             _runningLoad = true;
-            var coroutine = new ManagedCoroutine(LoadLevelAsync(scenePath));
+            var coroutine = ManagedCoroutine.Begin(LoadLevelAsync(scenePath));
         }
         
         public void ReloadScene()
@@ -247,7 +246,7 @@ namespace Rhinox.Magnus
                 return;
             }
             _runningLoad = true;
-            var coroutine = new ManagedCoroutine(ReloadLevelAsync());
+            var coroutine = ManagedCoroutine.Begin(ReloadLevelAsync());
         }
         
         // TODO: what if not enabled loadingscene prefab
