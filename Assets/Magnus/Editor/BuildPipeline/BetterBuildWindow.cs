@@ -219,7 +219,7 @@ namespace Rhinox.Magnus.Editor
     
     public class BetterBuildPageBase : PagerTreePage
     {
-        public BetterBuildPageBase(SlidePagedWindowNavigationHelper<object> pager) 
+        public BetterBuildPageBase(SlidePageNavigationHelper<object> pager) 
             : base(pager)
         {
         }
@@ -299,7 +299,7 @@ namespace Rhinox.Magnus.Editor
         [HorizontalGroup("TimeFormat"), HideLabel]
         public string TimeFormatSeparator;
         
-        public BetterBuildSettingsUI(SlidePagedWindowNavigationHelper<object> pager) : base(pager)
+        public BetterBuildSettingsUI(SlidePageNavigationHelper<object> pager) : base(pager)
         {
             
         }

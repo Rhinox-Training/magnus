@@ -323,8 +323,8 @@ namespace Rhinox.Magnus
         private void CleanupSource(AudioSource source)
         {
             source.Stop();
-            if (source.gameObject)
-                ObjectPool.Instance.PushToPool(source.gameObject);
+            if (source)
+                ObjectPool.Instance.PushToPool(source, GetSourcePrefab());
         }
 
         private void CleanupTween(AudioHandle handle)
