@@ -28,7 +28,6 @@ namespace Rhinox.Magnus
             GameObject asGO = new GameObject("[AUTO-GENERATED] Template -- AudioSource");
             asGO.transform.SetParent(transform);
             _loopingPrefab = asGO.AddComponent<AudioSource>();
-            _loopingPrefab.GetOrAddComponent<PoolObject>();
             return _loopingPrefab;
         }
 
@@ -356,9 +355,7 @@ namespace Rhinox.Magnus
         private AudioSource FetchNewAudioSource(AudioHandle handle, bool looping, bool spatial = false)
         {
             if (!_usedSourcesByHandle.ContainsKey(handle))
-                _usedSourcesByHandle.Add(handle,
-                    ObjectPool.Instance.PopFromPool(GetSourcePrefab().gameObject, parent: Instance.transform)
-                        .GetComponent<AudioSource>());
+                _usedSourcesByHandle.Add(handle, ObjectPool.Instance.PopFromPool(GetSourcePrefab(), parent: Instance.transform));
 
             AudioSource source = _usedSourcesByHandle[handle];
             source.loop = looping;
