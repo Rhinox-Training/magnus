@@ -357,7 +357,7 @@ namespace Rhinox.Magnus
         {
             if (!_usedSourcesByHandle.ContainsKey(handle))
                 _usedSourcesByHandle.Add(handle,
-                    ObjectPool.Instance.PopFromPool(GetSourcePrefab().gameObject, container: Instance.transform)
+                    ObjectPool.Instance.PopFromPool(GetSourcePrefab().gameObject, parent: Instance.transform)
                         .GetComponent<AudioSource>());
 
             AudioSource source = _usedSourcesByHandle[handle];
