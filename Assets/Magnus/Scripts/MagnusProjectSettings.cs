@@ -1,7 +1,4 @@
-﻿using System;
-using Rhinox.Lightspeed;
-using Rhinox.Lightspeed.Collections;
-using Rhinox.Lightspeed.Reflection;
+﻿using Rhinox.Lightspeed;
 using Rhinox.Utilities;
 using Rhinox.Utilities.Attributes;
 using Sirenix.OdinInspector;
@@ -27,6 +24,11 @@ namespace Rhinox.Magnus
         [Title("Services"), HideLabel] 
         public ServiceSettings ServiceSettings;
 
+        #if USING_GRAPHY
+        [Title("Graphy"), AssetsOnly]
+        public GameObject GraphyPrefab;
+        #endif
+        
         private void OnEnable()
         {
             if (ServiceSettings == null)
@@ -44,6 +46,11 @@ namespace Rhinox.Magnus
             
             if (PlayerConfig == null)
                 PlayerConfig = Utility.FindAssetApproximately<PlayerConfig>("EmptyPlayerConfig");
+            
+            #if USING_GRAPHY
+            if (GraphyPrefab == null)
+                GraphyPrefab = Utility.FindAssetApproximately<GameObject>("[Graphy]", "Graphy");
+            #endif
 #endif
         }
     }
