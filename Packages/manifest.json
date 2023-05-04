@@ -4,6 +4,7 @@
     "com.rhinox.open.lightspeed": "1.5.8",
     "com.rhinox.open.perceptor": "0.2.0",
     "com.rhinox.open.utilities": "1.5.4",
+    "com.tayx.graphy": "3.0.2",
     "com.unity.ide.rider": "1.2.1",
     "com.unity.ide.visualstudio": "2.0.11",
     "com.unity.ide.vscode": "1.2.3",
@@ -50,7 +51,8 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.rhinox.open",
-        "nl.elraccoone"
+        "nl.elraccoone",
+        "com.tayx.graphy"
       ]
     }
   ]
