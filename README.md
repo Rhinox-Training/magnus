@@ -4,6 +4,12 @@
 
 Game Framework for easier game creation
 
+## Dependencies
+
+- Lightspeed (https://github.com/Rhinox-Training/rhinox-lightspeed)
+- GuiUtils (https://github.com/Rhinox-Training/rhinox-guiutils)
+- Utilities (https://github.com/Rhinox-Training/rhinox-utilities)
+
 ## Optional dependencies
 
 - OdinInspector (https://odininspector.com/)
