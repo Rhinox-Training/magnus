@@ -81,8 +81,11 @@ namespace Rhinox.Magnus
         private static void OnRuntimeMethodLoad()
         {
             Application.quitting += OnQuitting;
-            
-            List<Type> types = new List<Type>();
+
+            List<Type> types = new List<Type>()
+            {
+                typeof(InternalHelperService)
+            };
             foreach (var type in Services.GetAvailableServices())
             {
                 if (!ShouldLoadService(type))
