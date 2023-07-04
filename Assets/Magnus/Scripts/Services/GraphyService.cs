@@ -15,12 +15,14 @@ namespace Rhinox.Magnus
         {
             base.Start();
 
-            _graphyInstance = GameObject.Instantiate(MagnusProjectSettings.Instance.GraphyPrefab, transform, false);
-
-            var startupField = typeof(GraphyManager).GetField("m_enableOnStartup",
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            startupField.SetValue(GraphyManager.Instance, false);
-            
+            if (MagnusProjectSettings.Instance.GraphyPrefab)
+            {
+                _graphyInstance = GameObject.Instantiate(MagnusProjectSettings.Instance.GraphyPrefab, transform, false);
+                
+                var startupField = typeof(GraphyManager).GetField("m_enableOnStartup",
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                startupField.SetValue(GraphyManager.Instance, false);
+            }
         }
 
         public void ToggleGUI()
