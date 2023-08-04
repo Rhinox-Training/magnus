@@ -13,10 +13,7 @@ using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector;
 #if ODIN_INSPECTOR
-using Rhinox.GUIUtils.Odin.Editor;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
+using SirenixEditorGUI = Sirenix.Utilities.Editor.SirenixEditorGUI;
 #endif
 
 namespace Rhinox.Magnus.Editor
