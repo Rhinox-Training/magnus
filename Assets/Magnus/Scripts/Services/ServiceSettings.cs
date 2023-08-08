@@ -118,6 +118,8 @@ namespace Rhinox.Magnus
             if (Services == null)
                 Services = new List<ServiceSettingsEntry>();
 
+            Services.RemoveAll(x => x.ServiceType.Type == null);
+
             foreach (var type in Rhinox.Magnus.Services.GetAvailableServices())
             {
                 var serializableType = new SerializableType(type);
