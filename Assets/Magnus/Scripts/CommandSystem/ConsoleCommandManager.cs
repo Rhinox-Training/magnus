@@ -117,7 +117,7 @@ namespace Rhinox.Magnus.CommandSystem
 
         private bool ValidateCommandName(string commandName)
         {
-            Regex r = new Regex("[aA-zZ0-9_-]+");
+            Regex r = new Regex("[a-zA-Z0-9_-]+");
             return commandName.All(x => r.IsMatch(x.ToString()));
         }
 
