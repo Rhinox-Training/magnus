@@ -11,10 +11,10 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
-            if (CameraInfo.Instance == null)
-                return new[] { "Camera Info is not loaded." };
+            if (Camera.main == null)
+                return new[] { "No main camera found" };
 
-            LayerMask layerMask = CameraInfo.Instance.Main.cullingMask;
+            LayerMask layerMask = Camera.main.cullingMask;
 
             string layers = "";
 
