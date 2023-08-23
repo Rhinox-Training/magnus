@@ -10,10 +10,10 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
-            if (CameraInfo.Instance == null)
-                return new[] { "Camera Info not loaded." };
+            if (Camera.main == null)
+                return new[] { "No main camera found" };
 
-            var mainCamera = CameraInfo.Instance.Main;
+            var mainCamera = Camera.main;
 
             if (!UnityTypeParser.TryParseLayer(args[0], out var layerIdx))
                 return new[] { $"Unable to parse layer from {args[0]}" };
