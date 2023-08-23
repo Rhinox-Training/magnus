@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rhinox.Lightspeed;
@@ -8,6 +9,7 @@ using Rhinox.Utilities;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+[Serializable, RefactoringOldNamespace("", "com.rhinox.volt")]
 public class LevelDefinitionData
 {
     public int ID;
