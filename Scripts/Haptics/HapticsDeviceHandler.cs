@@ -1,5 +1,4 @@
-﻿using UnityEngine.iOS;
-
+﻿
 namespace Rhinox.Magnus
 {
     public abstract class HapticsDeviceHandler
