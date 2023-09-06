@@ -15,7 +15,7 @@ namespace Rhinox.Magnus
         public GameMode Mode;
     }
     
-    public class KeyboardModeSwitcher : SerializedMonoBehaviour
+    public class KeyboardModeSwitcher : MonoBehaviour
     {
         public List<EasyGameModeBind> ModeBinds = new List<EasyGameModeBind>();
         private float _lastPressTime;
