@@ -6,7 +6,6 @@ using Rhinox.Magnus;
 using Rhinox.Perceptor;
 using Rhinox.Utilities;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Rhinox.Magnus
