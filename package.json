@@ -1,7 +1,7 @@
 {
   "name": "com.rhinox.open.magnus",
   "displayName": "Magnus - Game Framework",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "unity": "2019.4",
   "description": "Game Framework built on top of Unity",
   "keywords": [
@@ -11,9 +11,9 @@
   "category": "Unity",
   "dependencies": {
 	"com.unity.nuget.newtonsoft-json": "2.0.0",
-	"com.rhinox.open.guiutils": "2.11.1",
-    "com.rhinox.open.lightspeed": "1.6.0",
-    "com.rhinox.open.utilities": "1.7.0",
+	"com.rhinox.open.guiutils": "2.12.0",
+    "com.rhinox.open.lightspeed": "1.7.0",
+    "com.rhinox.open.utilities": "1.8.0",
 	"com.rhinox.open.perceptor": "0.2.0",
     "com.unity.textmeshpro": "2.1.6",
     "nl.elraccoone.tweens": "2.1.0"
