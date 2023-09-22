@@ -7,20 +7,29 @@ namespace Rhinox.Magnus
 {
     public class EmptyConfig : PlayerConfig
     {
+        public bool CreateCameraIfNotFound = true;
+        
         protected override Player CreatePlayer(Transform parent, PlayerProfile profile = null)
         {
+            GameObject playerObject;
             var camera = Camera.main;
 
-            if (camera == null)
+            if (camera == null) // TODO: this is redundant? Camera.main returns object with MainCamera tag if it exists
                 camera = Object.FindObjectsOfType<Camera>().FirstOrDefault(x => x.CompareTag("MainCamera"));
             
             if (camera == null)
             {
-                var go = Utility.Create("[GENERATED] Player", parent);
-                go.tag = "MainCamera";
-                camera = go.AddComponent<Camera>();
+                playerObject = Utility.Create("[GENERATED] Player", parent);
+                if (CreateCameraIfNotFound)
+                {
+                    playerObject.tag = "MainCamera";
+                    playerObject.AddComponent<Camera>();
+                }
             }
-            var player = camera.gameObject.GetOrAddComponent<Player>();
+            else
+                playerObject = camera.gameObject;
+            
+            var player = playerObject.GetOrAddComponent<Player>();
             player.Initialize();
             player.Profile = profile;
             

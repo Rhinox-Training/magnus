@@ -89,7 +89,7 @@ namespace Rhinox.Magnus
             bool playerIsValid = false;
             if (_loadedPlayer == null)
             {
-                PLog.Info<MagnusLogger>($"Spawning new player at pos({position.Print()}) and rot({rotation.Print()})");
+                PLog.Info<MagnusLogger>($"Spawning new player at pos({position.Print()}) and rot({rotation.eulerAngles.Print()})");
                 playerIsValid = SpawnPlayer(position, rotation);
             }
             else

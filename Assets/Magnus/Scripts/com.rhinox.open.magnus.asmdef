@@ -8,7 +8,8 @@
         "com.rhinox.open.guiutils.attributes",
         "com.rhinox.open.utilities",
         "nl.elraccoone.tweens",
-        "Tayx.Graphy"
+        "Tayx.Graphy",
+        "com.rhinox.open.vortex"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -22,6 +23,11 @@
             "name": "com.tayx.graphy",
             "expression": "3.0.2",
             "define": "USING_GRAPHY"
+        },
+        {
+            "name": "com.rhinox.open.vortex",
+            "expression": "0.1.0",
+            "define": "USING_VORTEX"
         }
     ],
     "noEngineReferences": false

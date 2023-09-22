@@ -1,4 +1,5 @@
 ﻿using Rhinox.Lightspeed;
+using Rhinox.Perceptor;
 using Rhinox.Utilities;
 using Rhinox.Utilities.Attributes;
 using Sirenix.OdinInspector;
@@ -52,6 +53,14 @@ namespace Rhinox.Magnus
                 GraphyPrefab = Utility.FindAssetApproximately<GameObject>("[Graphy]", "Graphy");
             #endif
 #endif
+        }
+
+        public T GetPlayerConfig<T>() where T : PlayerConfig
+        {
+            if (PlayerConfig is T castConfig)
+                return castConfig;
+            PLog.Warn<MagnusLogger>($"PlayerConfig is {PlayerConfig?.GetType()?.Name ?? "<null>"}, not compatible with {typeof(T).Name}");
+            return default(T);
         }
     }
 }

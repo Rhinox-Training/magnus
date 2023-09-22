@@ -143,7 +143,7 @@ namespace Rhinox.Magnus
             if (m == null)
                 return null;
 
-            var service = m.Invoke(null, null) as IService;
+            var service = m.Invoke(null, new [] { type }) as IService;
             return service;
         }
 

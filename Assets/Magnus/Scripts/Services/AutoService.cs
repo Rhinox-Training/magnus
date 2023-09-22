@@ -61,22 +61,28 @@ namespace Rhinox.Magnus
             
         }
 
-        protected static IService Initialize()
+        protected static IService Initialize(Type serviceType)
         {
+            if (serviceType == null || !serviceType.InheritsFrom<T>())
+            {
+                PLog.Error<MagnusLogger>($"ServiceType {serviceType} is invalid for service implementation of type {typeof(T).Name}");
+                return null;
+            }
+            
             if (_instance != null)
             {
-                PLog.Warn<MagnusLogger>($"Initialize failed for service {typeof(T).Name}, already exists.");
+                PLog.Warn<MagnusLogger>($"Initialize failed for service {typeof(T).Name}, already exists as {_instance.GetType().Name}");
                 return _instance;
             }
 
-            _instance = new T();
+            _instance = (T)Activator.CreateInstance(serviceType);
             
-            PLog.Info<MagnusLogger>($"Initializing service {typeof(T).Name}");
+            PLog.Info<MagnusLogger>($"Initializing service {_instance.GetType().Name}");
             SceneManager.sceneLoaded += _instance.OnSceneLoaded;
             SceneManager.sceneUnloaded += _instance.OnSceneUnloaded;
             
             _instance.OnInitialize();
-            PLog.Trace<MagnusLogger>($"Initializing service {typeof(T).Name} completed");
+            PLog.Trace<MagnusLogger>($"Initializing service {_instance.GetType().Name} completed");
             return _instance;
         }
 

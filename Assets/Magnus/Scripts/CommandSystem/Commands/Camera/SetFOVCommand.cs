@@ -11,10 +11,7 @@ namespace Rhinox.Magnus.CommandSystem
 
         public string[] Execute(string[] args)
         {
-            if(CameraInfo.Instance == null)
-                return new[] { "Camera Info not loaded." };
-            
-            var mainCamera = CameraInfo.Instance.Main;
+            var mainCamera = Camera.main;
             
             if(mainCamera == null)
                 return new[] { "No main camera found" };

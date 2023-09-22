@@ -1,4 +1,5 @@
-﻿using Rhinox.GUIUtils.Attributes;
+﻿using System;
+using Rhinox.GUIUtils.Attributes;
 using Rhinox.Lightspeed;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Rhinox.Magnus
         float GetVolume();
     }
 
-    [AssignableTypeFilter(Expanded = true), LabelWidth(60)]
+    [AssignableTypeFilter(Expanded = true), LabelWidth(60), Serializable]
     public class RandomAudio : IAudio
     {
         public string Name;
@@ -25,7 +26,7 @@ namespace Rhinox.Magnus
         public float GetVolume() => Volume;
     }
 
-    [AssignableTypeFilter(Expanded = true), LabelWidth(60)]
+    [AssignableTypeFilter(Expanded = true), LabelWidth(60), Serializable]
     public class Audio : IAudio
     {
         public string Name;
