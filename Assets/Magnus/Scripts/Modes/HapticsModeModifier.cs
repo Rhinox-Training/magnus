@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using Rhinox.Magnus;
 using Rhinox.Perceptor;
 using Rhinox.Utilities;
-using Rhinox.VOLT;
 
-namespace Rhinox.VOLT.Domain
+namespace Rhinox.Magnus
 {
     public class HapticsModeModifier : GameModeModifier
     {
