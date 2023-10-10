@@ -34,6 +34,10 @@ namespace Rhinox.Magnus
         }
 
         public bool LoggedIn => _currentPlayerProfile != null;
+        
+        public delegate void PlayerEventHandler(Player player);
+
+        public event PlayerEventHandler PlayerChanged; 
 
         public void Login(PlayerProfile profile) // TODO: multiplayer support
         {
@@ -133,6 +137,8 @@ namespace Rhinox.Magnus
             
             _loadedPlayer = config.Load(_currentPlayerProfile, transform);
             _loadedPlayer.SetPositionAndRotation(position, rotation);
+            
+            PlayerChanged?.Invoke(_loadedPlayer);
 
             PLog.Trace<MagnusLogger>($"Spawning NEW player {_loadedPlayer.name} at pos({position.Print()}) and rot({rotation.Print()})");
             return true;
