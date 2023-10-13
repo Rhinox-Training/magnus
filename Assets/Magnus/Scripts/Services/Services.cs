@@ -114,7 +114,11 @@ namespace Rhinox.Magnus
         private static bool ShouldLoadService(Type t)
         {
             if (MagnusProjectSettings.Instance.ServiceSettings == null)
+            {
+                PLog.Trace<MagnusLogger>($"No ServiceSettings configured, load type '{t.Name}' defaulting to true...");
                 return true;
+            }
+
             return MagnusProjectSettings.Instance.ServiceSettings.ShouldLoadService(t);
         }
 

@@ -49,6 +49,10 @@ namespace Rhinox.Magnus
             {
                 ServiceType = _baseType;
                 OnServiceTypeChanged();
+                
+                var attr = _baseType.Type.GetCustomAttribute<ServiceLoaderAttribute>();
+                if (attr != null && attr.DisabledByDefault)
+                    Toggled = false;
             }
         }
         
@@ -79,11 +83,18 @@ namespace Rhinox.Magnus
         }
 #endif
         
-        public bool Matches(Type t)
+        public bool ShouldLoad(Type t)
         {
             if (t == null)
                 return false;
             return ServiceType == t;
+        }
+        
+        public bool Matches(Type t)
+        {
+            if (t == null)
+                return false;
+            return t.InheritsFrom(_baseType.Type);
         }
 
         public void UpdateBase(Type commonBase)
@@ -195,14 +206,28 @@ namespace Rhinox.Magnus
 
             if (Services == null)
                 return true;
+
+            bool foundSetting = false;
             foreach (var serviceSetting in Services)
             {
                 if (serviceSetting == null)
                     continue;
-                if (serviceSetting.Matches(serviceType))
+                if (!serviceSetting.Matches(serviceType))
+                    continue;
+                
+                foundSetting = true;
+                    
+                if (serviceSetting.ShouldLoad(serviceType))
                     return serviceSetting.Toggled;
             }
-            return true;
+
+            if (!foundSetting)
+            {
+                PLog.Trace<MagnusLogger>($"No ServiceSetting found for '{serviceType.Name}', allowing load...");
+                return true;
+            }
+
+            return false;
         }
 
         public bool ShouldLoadService<T>() where T : IService => ShouldLoadService(typeof(T));
