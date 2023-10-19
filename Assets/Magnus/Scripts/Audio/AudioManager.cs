@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ElRaccoone.Tweens;
-using ElRaccoone.Tweens.Core;
 using Rhinox.GUIUtils.Attributes;
 using Rhinox.Lightspeed;
 using Rhinox.Perceptor;
@@ -36,8 +35,7 @@ namespace Rhinox.Magnus
 
         private Dictionary<AudioHandle, AudioSource> _usedSourcesByHandle = new Dictionary<AudioHandle, AudioSource>();
 
-        private Dictionary<AudioHandle, Tween<float>>
-            _activeTweenByHandle = new Dictionary<AudioHandle, Tween<float>>();
+        private Dictionary<AudioHandle, ManagedCoroutine> _activeTweenByHandle = new Dictionary<AudioHandle, ManagedCoroutine>();
 
         private List<AudioHandle> _playingHandles = new List<AudioHandle>();
 
@@ -300,14 +298,31 @@ namespace Rhinox.Magnus
             _usedSourcesByHandle.Remove(handle);
 
 
-            Tween<float> tween = source.TweenAudioSourceVolume(0, fadeTime).SetEaseCubicOut();
-            _activeTweenByHandle[handle] = tween;
-            tween.SetOnComplete(() =>
+            var tween = ManagedCoroutine.Begin(EaseOutVolume(source, fadeTime), (manual) =>
             {
                 CleanupSource(source);
                 CleanupTween(handle);
             });
+            _activeTweenByHandle[handle] = tween;
 
+        }
+
+        private IEnumerator EaseOutVolume(AudioSource source, float duration)
+        {
+            float time = 0;
+            float startVolume = source.volume;
+            float endVolume = 0.0f;
+            while (time <= duration)
+            {
+                time = time + Time.deltaTime;
+                source.volume = Mathf.Lerp(startVolume, endVolume, EaseOut(time / duration));
+                yield return null;
+            }
+        }
+
+        private float EaseOut(float t)
+        {
+            return 1 - Mathf.Pow(1 - t, 3);
         }
 
         private void CleanupHandle(AudioHandle handle)
@@ -329,10 +344,8 @@ namespace Rhinox.Magnus
 
         private void CleanupTween(AudioHandle handle)
         {
-            var tween = _activeTweenByHandle.GetOrDefault(handle);
-            if (tween == null) return;
-
-            tween.Cancel();
+            if (_activeTweenByHandle.ContainsKey(handle)) 
+                return;
 
             _activeTweenByHandle.Remove(handle);
         }
