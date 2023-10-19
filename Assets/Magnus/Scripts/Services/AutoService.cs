@@ -8,6 +8,7 @@ using Rhinox.Perceptor;
 using Rhinox.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 using Object = UnityEngine.Object;
 
 namespace Rhinox.Magnus
@@ -61,6 +62,7 @@ namespace Rhinox.Magnus
             
         }
 
+        [Preserve]
         protected static IService Initialize(Type serviceType)
         {
             if (serviceType == null || !serviceType.InheritsFrom<T>())
@@ -71,7 +73,7 @@ namespace Rhinox.Magnus
             
             if (_instance != null)
             {
-                PLog.Warn<MagnusLogger>($"Initialize failed for service {typeof(T).Name}, already exists as {_instance.GetType().Name}");
+                PLog.Warn<MagnusLogger>($"Initialize failed for service {serviceType.Name}, already exists as {_instance.GetType().Name}");
                 return _instance;
             }
 

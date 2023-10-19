@@ -1,5 +1,6 @@
 {
     "name": "com.rhinox.open.magnus",
+    "rootNamespace": "",
     "references": [
         "Unity.TextMeshPro",
         "com.rhinox.open.lightspeed",
@@ -7,7 +8,6 @@
         "com.rhinox.open.guiutils",
         "com.rhinox.open.guiutils.attributes",
         "com.rhinox.open.utilities",
-        "nl.elraccoone.tweens",
         "Tayx.Graphy",
         "com.rhinox.open.vortex"
     ],
