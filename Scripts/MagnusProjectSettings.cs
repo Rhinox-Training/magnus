@@ -25,6 +25,9 @@ namespace Rhinox.Magnus
         [Title("Services"), HideLabel] 
         public ServiceSettings ServiceSettings;
 
+        [Title("Generic Type Generation"), HideLabel]
+        public UnitySafeTypeGenerationSettings GenerationSettings;
+
         #if USING_GRAPHY
         [Title("Graphy"), AssetsOnly]
         public GameObject GraphyPrefab;
@@ -35,7 +38,11 @@ namespace Rhinox.Magnus
             if (ServiceSettings == null)
                 ServiceSettings = new ServiceSettings();
 
+            if (GenerationSettings == null)
+                GenerationSettings = new UnitySafeTypeGenerationSettings();
+
             ServiceSettings.Reinitialize();
+            GenerationSettings.Reinitialize();
         }
         
         protected override void LoadDefaults()
