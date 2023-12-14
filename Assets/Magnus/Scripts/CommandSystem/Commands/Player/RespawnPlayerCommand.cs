@@ -32,7 +32,7 @@ namespace Rhinox.Magnus.CommandSystem.Player
             if (args.Length > 2 && !bool.TryParse(args[2], out persistent))
                 return new[] { "Unable to parse persistent, format is true/false" };
 
-            PlayerManager.Instance.RespawnPlayer(position, rotation, persistent);
+            PlayerManager.Instance.RespawnLocalPlayer(position, rotation, persistent);
             return new[]
             {
                 $"Player respawned at position {position}, with rotation {eulerAngles}, and persistent {persistent}"

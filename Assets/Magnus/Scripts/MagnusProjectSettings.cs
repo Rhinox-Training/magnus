@@ -17,6 +17,7 @@ namespace Rhinox.Magnus
         public LevelLoadingArea LoadingScenePrefab;
         [Title("Player System"), AssetsOnly]
         public PlayerConfig PlayerConfig;
+        public PlayerProfile LocalPlayerProfile;
         [Title("Game Modes"), AssetsOnly] 
         public GameModeConfig GameModes;
         [Title("Command System")]
@@ -51,7 +52,10 @@ namespace Rhinox.Magnus
             #if USING_GRAPHY
             if (GraphyPrefab == null)
                 GraphyPrefab = Utility.FindAssetApproximately<GameObject>("[Graphy]", "Graphy");
-            #endif
+
+            if (LocalPlayerProfile == null)
+                LocalPlayerProfile = AnonymousPlayerProfile.Default;
+#endif
 #endif
         }
 

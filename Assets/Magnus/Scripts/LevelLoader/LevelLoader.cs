@@ -315,7 +315,7 @@ namespace Rhinox.Magnus
             if (changingActiveScene && !PlayerManager.Instance.ActivePlayer.IsPlayerPersistent())
                 PlayerManager.Instance.KillLocalPlayer();
 
-            if (PlayerManager.Instance.RespawnPlayer(_activeArea.transform.position))
+            if (PlayerManager.Instance.RespawnLocalPlayer(_activeArea.transform.position))
                 // TODO: make optional, you might want to keep modifiers on level transition (Project Settings?)
                 PlayerManager.Instance.ActivePlayer.ClearAllModifiers(); 
 

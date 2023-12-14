@@ -8,4 +8,10 @@ namespace Rhinox.Magnus
     public abstract class PlayerProfile
     {
     }
+
+    [Serializable]
+    public class AnonymousPlayerProfile : PlayerProfile
+    {
+        public static readonly AnonymousPlayerProfile Default = new AnonymousPlayerProfile();
+    }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Rhinox.GUIUtils.Attributes;
 using Rhinox.Lightspeed;
@@ -14,19 +15,9 @@ namespace Rhinox.Magnus
     [ServiceLoader(-4001), ExecutionOrder(-4001)]
     public class PlayerManager : AutoService<PlayerManager>
     {
-        protected Player _loadedPlayer;
+        protected Dictionary<PlayerProfile, Player> _activePlayers;
 
-        public Player ActivePlayer => _loadedPlayer;
-        
-        public Vector3 ActivePlayerPosition
-        {
-            get
-            {
-                if (_loadedPlayer == null)
-                    return Vector3.zero;
-                return _loadedPlayer.GetPosition();
-            }
-        }
+        public Player ActivePlayer => _activePlayers != null && _activePlayers.ContainsKey(MagnusProjectSettings.Instance.LocalPlayerProfile) ? _activePlayers[MagnusProjectSettings.Instance.LocalPlayerProfile] : null;
         
         public delegate void PlayerEventHandler(Player player);
 
@@ -34,55 +25,60 @@ namespace Rhinox.Magnus
         public event PlayerEventHandler PlayerSpawned;
         public event PlayerEventHandler PlayerKilled;
 
-        
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            _activePlayers = new Dictionary<PlayerProfile, Player>();
+        }
+
         public void RespawnPlayer(PlayerStart playerStart = null)
         {
             if (playerStart == null)
-                RespawnPlayer(Vector3.zero);
+                RespawnLocalPlayer(Vector3.zero);
             else
-                RespawnPlayer(playerStart.transform.position, playerStart.transform.rotation);
+                RespawnLocalPlayer(playerStart.transform.position, playerStart.transform.rotation);
         }
-        
-        public bool RespawnPlayer(Vector3 position, bool persistent = false) => RespawnPlayer(position, Quaternion.identity, persistent);
 
-        public bool RespawnPlayer(Vector3 position, Quaternion rotation, bool persistent = false)
+        public bool RespawnLocalPlayer(Vector3 position, Quaternion rotation, bool persistent = false) =>
+            RespawnPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile, position, rotation, persistent);
+        
+        public bool RespawnLocalPlayer(Vector3 position, bool persistent = false) => RespawnPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile, position, Quaternion.identity, persistent);
+        
+        public bool RespawnPlayer(PlayerProfile profile, Vector3 position, Quaternion rotation, bool persistent = false)
         {
             bool playerIsValid = false;
-            if (_loadedPlayer == null)
+            var player = _activePlayers.ContainsKey(profile) ? _activePlayers[profile] : null;
+            if (player == null)
             {
                 PLog.Info<MagnusLogger>($"Spawning new player at pos({position.Print()}) and rot({rotation.eulerAngles.Print()})");
-                playerIsValid = SpawnPlayer(position, rotation);
+                playerIsValid = SpawnPlayer(position, rotation, profile,persistent);
+            }
+            else if (!IsPlayerCompatibleWithSceneConfig(player))
+            {
+                KillPlayer(profile);
+                playerIsValid = SpawnPlayer(position, rotation, profile, persistent);
             }
             else
             {
-                if (!IsPlayerCompatibleWithSceneConfig(_loadedPlayer))
-                {
-                    KillPlayer(_loadedPlayer);
-                    return RespawnPlayer(position, rotation, persistent);
-                }
                 PLog.Info<MagnusLogger>($"Moving player to pos({position.Print()}) and rot({rotation.Print()})");
-    
                 // rotate playArea so the player matches the position and rotation
-                _loadedPlayer.SetPositionAndRotation(position, rotation);
+                player.SetPositionAndRotation(position, rotation);
                 playerIsValid = true;
             }
-
-            if (persistent && !_loadedPlayer.IsPlayerPersistent())
-            {
-                PLog.Trace<MagnusLogger>($"Making player {_loadedPlayer.name} persistent");
-                Object.DontDestroyOnLoad(_loadedPlayer);
-            }
-
             return playerIsValid;
         }
         
-        private void SpawnPlayer(Vector3 position, PlayerProfile profile = null) => SpawnPlayer(position, Quaternion.identity, profile);
-        
-        private bool SpawnPlayer(Vector3 position, Quaternion rotation, PlayerProfile profile = null)
+        private bool SpawnPlayer(Vector3 position, Quaternion rotation, PlayerProfile profile, bool persistent = false)
         {
-            if (_loadedPlayer != null)
+            if (profile == null)
             {
-                PLog.Error<MagnusLogger>("Player already spawned");
+                PLog.Error<MagnusLogger>("Cannot spawn player without a profile...");
+                return false;
+            }
+            
+            if (_activePlayers.ContainsKey(profile))
+            {
+                PLog.Error<MagnusLogger>($"Player '{profile}' already spawned");
                 return true;
             }
             var config = FindPlayerConfig();
@@ -92,30 +88,46 @@ namespace Rhinox.Magnus
                 return false;
             }
             
-            _loadedPlayer = config.Load(profile, transform);
-            _loadedPlayer.SetPositionAndRotation(position, rotation);
-            
-            LocalPlayerChanged?.Invoke(_loadedPlayer);
-            PlayerSpawned?.Invoke(_loadedPlayer);
+            var newPlayer = config.Load(profile, transform);
+            newPlayer.SetPositionAndRotation(position, rotation);
 
-            PLog.Trace<MagnusLogger>($"Spawning NEW player {_loadedPlayer.name} at pos({position.Print()}) and rot({rotation.Print()})");
+            if (persistent && !newPlayer.IsPlayerPersistent())
+            {
+                PLog.Trace<MagnusLogger>($"Making player {newPlayer.name} persistent");
+                Object.DontDestroyOnLoad(newPlayer);
+            }
+
+
+            _activePlayers.Add(profile, newPlayer);
+            
+            LocalPlayerChanged?.Invoke(newPlayer);
+            PlayerSpawned?.Invoke(newPlayer);
+
+            PLog.Trace<MagnusLogger>($"Spawning NEW player {newPlayer.name} at pos({position.Print()}) and rot({rotation.Print()})");
             return true;
         }
         
-        public bool KillPlayer(Player player)
+        public bool KillPlayer(PlayerProfile playerProfile)
         {
-            if (_loadedPlayer == null)
+            if (playerProfile == null)
                 return false;
+
+            if (!_activePlayers.ContainsKey(playerProfile))
+            {
+                PLog.Error<MagnusLogger>($"Player {playerProfile} was not registered, manager has no authority to kill this player...");
+                return false;
+            }
             
+            var player = _activePlayers[playerProfile];
             player.Kill();
             PlayerKilled?.Invoke(player);
+            _activePlayers.Remove(playerProfile);
             return true;
         }
 
         public void KillLocalPlayer()
         {
-            if (KillPlayer(_loadedPlayer))
-                _loadedPlayer = null;
+            KillPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile);
         }
         
         //==============================================================================================================
