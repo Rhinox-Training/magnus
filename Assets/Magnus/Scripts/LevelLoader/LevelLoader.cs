@@ -312,8 +312,8 @@ namespace Rhinox.Magnus
             
             yield return null;
 
-            if (changingActiveScene && !PlayerManager.Instance.IsPlayerPersistent)
-                PlayerManager.Instance.KillPlayer();
+            if (changingActiveScene && !PlayerManager.Instance.ActivePlayer.IsPlayerPersistent())
+                PlayerManager.Instance.KillLocalPlayer();
 
             if (PlayerManager.Instance.RespawnPlayer(_activeArea.transform.position))
                 // TODO: make optional, you might want to keep modifiers on level transition (Project Settings?)
@@ -325,7 +325,8 @@ namespace Rhinox.Magnus
 
         private IEnumerator RespawnPlayerAndCleanUpArea(GuidAsset playerStartIdentifier, bool skipTransition)
         {
-            PlayerManager.Instance.RespawnPlayer(playerStartIdentifier);
+            PlayerStart playerStart = PlayerStart.FindInCurrentScene(playerStartIdentifier);
+            PlayerManager.Instance.RespawnPlayer(playerStart);
             
             if (!skipTransition)
                 yield return HandleEnterTransition();

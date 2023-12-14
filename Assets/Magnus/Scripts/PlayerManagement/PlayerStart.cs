@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rhinox.Lightspeed;
+using Rhinox.Perceptor;
 using Rhinox.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -9,6 +11,24 @@ namespace Rhinox.Magnus
 {
     public class PlayerStart : MonoBehaviour
     {
+        public static PlayerStart FindInCurrentScene(GuidAsset playerStartAsset = null)
+        {
+            if (playerStartAsset != null)
+            {
+                var identifier = GuidIdentifier.GetFor(playerStartAsset, typeof(PlayerStart));
+                if (identifier != null)
+                    return (PlayerStart) identifier.TargetComponent;
+                else
+                    PLog.Warn<MagnusLogger>("FindSpawnLocation was passed a PlayerStart but it could not be found...");
+            }
+            
+            var spawnLocations = UnityEngine.Object.FindObjectsOfType<PlayerStart>();
+            if (spawnLocations.Length <= 1)
+                return spawnLocations.FirstOrDefault();
+
+            return spawnLocations.GetRandomObject();
+        }
+        
 #if UNITY_EDITOR
         private const string OPERATION_NAME = "GameObject/Player Start";
         

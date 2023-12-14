@@ -15,13 +15,9 @@ namespace Rhinox.Magnus
     public class PlayerManager : AutoService<PlayerManager>
     {
         protected Player _loadedPlayer;
-        protected PlayerProfile _currentPlayerProfile;
 
         public Player ActivePlayer => _loadedPlayer;
-        public bool IsPlayerPersistent => _loadedPlayer != null && _loadedPlayer.gameObject.scene != SceneManager.GetActiveScene();
-
-        private Transform _playArea;
-
+        
         public Vector3 ActivePlayerPosition
         {
             get
@@ -31,63 +27,16 @@ namespace Rhinox.Magnus
                 return _loadedPlayer.GetPosition();
             }
         }
-
-        public bool LoggedIn => _currentPlayerProfile != null;
         
         public delegate void PlayerEventHandler(Player player);
 
-        public event PlayerEventHandler PlayerChanged; 
+        public event PlayerEventHandler LocalPlayerChanged;
+        public event PlayerEventHandler PlayerSpawned;
+        public event PlayerEventHandler PlayerKilled;
 
-        public void Login(PlayerProfile profile) // TODO: multiplayer support
-        {
-            _currentPlayerProfile = profile;
-            if (_loadedPlayer != null)
-                _loadedPlayer.Profile = profile;
-        }
-
-        public void Logout()
-        {
-            _currentPlayerProfile = null;
-            if (_loadedPlayer != null)
-                _loadedPlayer.Profile = null;
-        }
         
-        public bool TryGetPlayerProfile<T>(out T playerProfile) where T : PlayerProfile, new()
+        public void RespawnPlayer(PlayerStart playerStart = null)
         {
-            playerProfile = null;
-            if (Instance.ActivePlayer == null)
-                return false;
-            
-            if (Instance.ActivePlayer.Profile is T activePlayerProfile)
-            {
-                playerProfile = activePlayerProfile;
-                return true;
-            }
-            
-            return false;
-        }
-
-        private PlayerStart FindSpawnLocation(GuidAsset playerStartAsset = null)
-        {
-            if (playerStartAsset != null)
-            {
-                var identifier = GuidIdentifier.GetFor(playerStartAsset, typeof(PlayerStart));
-                if (identifier != null)
-                    return (PlayerStart) identifier.TargetComponent;
-                else
-                    PLog.Warn<MagnusLogger>("FindSpawnLocation was passed a PlayerStart but it could not be found...");
-            }
-            
-            var spawnLocations = Object.FindObjectsOfType<PlayerStart>();
-            if (spawnLocations.Length <= 1)
-                return spawnLocations.FirstOrDefault();
-
-            return spawnLocations.GetRandomObject();
-        }
-        
-        public void RespawnPlayer(GuidAsset playerStartAsset = null)
-        {
-            PlayerStart playerStart = FindSpawnLocation(playerStartAsset);
             if (playerStart == null)
                 RespawnPlayer(Vector3.zero);
             else
@@ -106,9 +55,9 @@ namespace Rhinox.Magnus
             }
             else
             {
-                if (!IsActivePlayerCompatibleWithSceneConfig())
+                if (!IsPlayerCompatibleWithSceneConfig(_loadedPlayer))
                 {
-                    KillPlayer();
+                    KillPlayer(_loadedPlayer);
                     return RespawnPlayer(position, rotation, persistent);
                 }
                 PLog.Info<MagnusLogger>($"Moving player to pos({position.Print()}) and rot({rotation.Print()})");
@@ -118,7 +67,7 @@ namespace Rhinox.Magnus
                 playerIsValid = true;
             }
 
-            if (persistent && !IsPlayerPersistent)
+            if (persistent && !_loadedPlayer.IsPlayerPersistent())
             {
                 PLog.Trace<MagnusLogger>($"Making player {_loadedPlayer.name} persistent");
                 Object.DontDestroyOnLoad(_loadedPlayer);
@@ -127,9 +76,9 @@ namespace Rhinox.Magnus
             return playerIsValid;
         }
         
-        private void SpawnPlayer(Vector3 position) => SpawnPlayer(position, Quaternion.identity);
+        private void SpawnPlayer(Vector3 position, PlayerProfile profile = null) => SpawnPlayer(position, Quaternion.identity, profile);
         
-        private bool SpawnPlayer(Vector3 position, Quaternion rotation)
+        private bool SpawnPlayer(Vector3 position, Quaternion rotation, PlayerProfile profile = null)
         {
             if (_loadedPlayer != null)
             {
@@ -143,32 +92,43 @@ namespace Rhinox.Magnus
                 return false;
             }
             
-            _loadedPlayer = config.Load(_currentPlayerProfile, transform);
+            _loadedPlayer = config.Load(profile, transform);
             _loadedPlayer.SetPositionAndRotation(position, rotation);
             
-            PlayerChanged?.Invoke(_loadedPlayer);
+            LocalPlayerChanged?.Invoke(_loadedPlayer);
+            PlayerSpawned?.Invoke(_loadedPlayer);
 
             PLog.Trace<MagnusLogger>($"Spawning NEW player {_loadedPlayer.name} at pos({position.Print()}) and rot({rotation.Print()})");
             return true;
         }
         
-        public void KillPlayer()
+        public bool KillPlayer(Player player)
         {
             if (_loadedPlayer == null)
-                return;
+                return false;
             
-            _loadedPlayer.Kill();
-            _loadedPlayer = null;
+            player.Kill();
+            PlayerKilled?.Invoke(player);
+            return true;
         }
 
-        public bool IsActivePlayerCompatibleWithSceneConfig()
+        public void KillLocalPlayer()
         {
-            if (_loadedPlayer == null)
+            if (KillPlayer(_loadedPlayer))
+                _loadedPlayer = null;
+        }
+        
+        //==============================================================================================================
+        // Utility methods
+
+        public bool IsPlayerCompatibleWithSceneConfig(Player player)
+        {
+            if (player == null)
                 return true;
             PlayerConfig config = FindPlayerConfig();
-            if (config == MagnusProjectSettings.Instance.PlayerConfig && IsPlayerPersistent)
+            if (config == MagnusProjectSettings.Instance.PlayerConfig && player.IsPlayerPersistent())
                 return true;
-            return config == _loadedPlayer.LoadedConfig;
+            return config == player.LoadedConfig;
         }
 
         private PlayerConfig FindPlayerConfig()

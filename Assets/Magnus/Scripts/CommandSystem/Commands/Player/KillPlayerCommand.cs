@@ -12,7 +12,7 @@
             if(playerManager == null)
                 return new[] { "No Player Manager found." };
             
-            playerManager.KillPlayer();
+            playerManager.KillLocalPlayer();
             return new[] { "Player killed." };
         }
     }
