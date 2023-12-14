@@ -17,7 +17,6 @@ namespace Rhinox.Magnus
         protected Player _loadedPlayer;
         protected PlayerProfile _currentPlayerProfile;
 
-        [ShowReadOnlyInPlayMode]
         public Player ActivePlayer => _loadedPlayer;
         public bool IsPlayerPersistent => _loadedPlayer != null && _loadedPlayer.gameObject.scene != SceneManager.GetActiveScene();
 
@@ -53,10 +52,19 @@ namespace Rhinox.Magnus
                 _loadedPlayer.Profile = null;
         }
         
-        public T GetPlayerProfile<T>() where T : PlayerProfile, new()
+        public bool TryGetPlayerProfile<T>(out T playerProfile) where T : PlayerProfile, new()
         {
-            var activePlayerProfile = Instance.ActivePlayer.Profile as T;
-            return activePlayerProfile ?? new T();
+            playerProfile = null;
+            if (Instance.ActivePlayer == null)
+                return false;
+            
+            if (Instance.ActivePlayer.Profile is T activePlayerProfile)
+            {
+                playerProfile = activePlayerProfile;
+                return true;
+            }
+            
+            return false;
         }
 
         private PlayerStart FindSpawnLocation(GuidAsset playerStartAsset = null)
