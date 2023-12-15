@@ -16,8 +16,11 @@ namespace Rhinox.Magnus
     public class PlayerManager : AutoService<PlayerManager>
     {
         protected Dictionary<PlayerProfile, Player> _activePlayers;
+        protected List<PlayerProfile> _generatedPlayers;
 
-        public Player ActivePlayer => _activePlayers != null && _activePlayers.ContainsKey(MagnusProjectSettings.Instance.LocalPlayerProfile) ? _activePlayers[MagnusProjectSettings.Instance.LocalPlayerProfile] : null;
+        public Player ActivePlayer => _activePlayers != null && _activePlayers.ContainsKey(MagnusProjectSettings.Instance.LocalPlayerProfile) ? 
+            _activePlayers[MagnusProjectSettings.Instance.LocalPlayerProfile] : 
+            null;
         
         public delegate void PlayerEventHandler(Player player);
 
@@ -29,9 +32,13 @@ namespace Rhinox.Magnus
         {
             base.OnInitialize();
             _activePlayers = new Dictionary<PlayerProfile, Player>();
+            _generatedPlayers = new List<PlayerProfile>();
         }
+        
+        //==============================================================================================================
+        // Local player specific
 
-        public void RespawnPlayer(PlayerStart playerStart = null)
+        public void RespawnLocalPlayer(PlayerStart playerStart = null)
         {
             if (playerStart == null)
                 RespawnLocalPlayer(Vector3.zero);
@@ -44,6 +51,32 @@ namespace Rhinox.Magnus
         
         public bool RespawnLocalPlayer(Vector3 position, bool persistent = false) => RespawnPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile, position, Quaternion.identity, persistent);
         
+        public void KillLocalPlayer()
+        {
+            KillPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile);
+        }
+        
+        //==============================================================================================================
+        // General API
+
+        public Player GetActivePlayer(PlayerProfile profile)
+        {
+            if (profile == null)
+            {
+                PLog.Error<MagnusLogger>($"Null profile not supported in search for player...");
+                return null;
+            }
+
+            if (_activePlayers == null || !_activePlayers.ContainsKey(profile))
+                return null;
+            return _activePlayers[profile];
+        }
+
+        public int GetActivePlayerCount()
+        {
+            return _activePlayers != null ? _activePlayers.Count : 0;
+        }
+        
         public bool RespawnPlayer(PlayerProfile profile, Vector3 position, Quaternion rotation, bool persistent = false)
         {
             bool playerIsValid = false;
@@ -51,7 +84,7 @@ namespace Rhinox.Magnus
             if (player == null)
             {
                 PLog.Info<MagnusLogger>($"Spawning new player at pos({position.Print()}) and rot({rotation.eulerAngles.Print()})");
-                playerIsValid = SpawnPlayer(position, rotation, profile,persistent);
+                playerIsValid = SpawnPlayer(position, rotation, profile, persistent);
             }
             else if (!IsPlayerCompatibleWithSceneConfig(player))
             {
@@ -67,6 +100,63 @@ namespace Rhinox.Magnus
             }
             return playerIsValid;
         }
+
+        public bool RegisterPlayer(PlayerProfile profile, Player player)
+        {
+            if (profile == null || player == null)
+            {
+                PLog.Error<MagnusLogger>($"Cannot register a player '{player}' to a profile '{profile}' player if one or both are null...");
+                return false;
+            }
+
+            if (_activePlayers.ContainsKey(profile))
+            {
+                if (_generatedPlayers.Contains(profile))
+                {
+                    if (!KillPlayer(profile))
+                    {
+                        PLog.Error<MagnusLogger>($"Could not kill generated player {_activePlayers[profile]}...");
+                        return false;
+                    }
+                }
+                else
+                {
+                    PLog.Error<MagnusLogger>($"Could not register new player for profile {profile}, already has a registered non-generated player {_activePlayers[profile]}");
+                    return false;
+                }
+            }
+
+            _activePlayers.Add(profile, player);
+            return true;
+        }
+
+        public bool DeregisterPlayer(PlayerProfile profile, out Player player)
+        {
+            if (profile == null)
+            {
+                PLog.Error<MagnusLogger>($"Cannot deregister a null profile, unsupported...");
+                player = null;
+                return false;
+            }
+
+            if (!_activePlayers.ContainsKey(profile))
+            {
+                PLog.Warn<MagnusLogger>($"No player found for profile '{profile}'...");
+                player = null;
+                return false;
+            }
+
+            if (_generatedPlayers.Contains(profile))
+            {
+                PLog.Warn<MagnusLogger>($"Cannot deregister a generated player...");
+                player = null;
+                return false;
+            }
+
+            player = _activePlayers[profile];
+            _activePlayers.Remove(profile);
+            return true;
+        }
         
         private bool SpawnPlayer(Vector3 position, Quaternion rotation, PlayerProfile profile, bool persistent = false)
         {
@@ -81,6 +171,7 @@ namespace Rhinox.Magnus
                 PLog.Error<MagnusLogger>($"Player '{profile}' already spawned");
                 return true;
             }
+            
             var config = FindPlayerConfig();
             if (config == null)
             {
@@ -99,14 +190,14 @@ namespace Rhinox.Magnus
 
 
             _activePlayers.Add(profile, newPlayer);
+            _generatedPlayers.Add(profile);
             
-            LocalPlayerChanged?.Invoke(newPlayer);
-            PlayerSpawned?.Invoke(newPlayer);
+            TriggerPlayerSpawnEvents(profile, newPlayer);
 
             PLog.Trace<MagnusLogger>($"Spawning NEW player {newPlayer.name} at pos({position.Print()}) and rot({rotation.Print()})");
             return true;
         }
-        
+
         public bool KillPlayer(PlayerProfile playerProfile)
         {
             if (playerProfile == null)
@@ -119,23 +210,32 @@ namespace Rhinox.Magnus
             }
             
             var player = _activePlayers[playerProfile];
-            player.Kill();
+            if (!player.Kill())
+            {
+                PLog.Debug<MagnusLogger>($"Cannot kill player '{playerProfile}'");
+                return false;
+            }
+            
             PlayerKilled?.Invoke(player);
             _activePlayers.Remove(playerProfile);
+            _generatedPlayers.Remove(playerProfile);
             return true;
-        }
-
-        public void KillLocalPlayer()
-        {
-            KillPlayer(MagnusProjectSettings.Instance.LocalPlayerProfile);
         }
         
         //==============================================================================================================
         // Utility methods
 
+        private void TriggerPlayerSpawnEvents(PlayerProfile profile, Player newPlayer)
+        {
+            if (profile == MagnusProjectSettings.Instance.LocalPlayerProfile)
+                LocalPlayerChanged?.Invoke(newPlayer);
+            PlayerSpawned?.Invoke(newPlayer);
+        }
+
         public bool IsPlayerCompatibleWithSceneConfig(Player player)
         {
-            if (player == null)
+            // Registered non-generated players are always compatible
+            if (player == null || !_generatedPlayers.Contains(player.Profile)) 
                 return true;
             PlayerConfig config = FindPlayerConfig();
             if (config == MagnusProjectSettings.Instance.PlayerConfig && player.IsPlayerPersistent())

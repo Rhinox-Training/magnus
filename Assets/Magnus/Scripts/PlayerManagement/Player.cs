@@ -99,12 +99,13 @@ namespace Rhinox.Magnus
             return transform.position;
         }
 
-        public virtual void Kill()
+        public virtual bool Kill()
         {
             if (LoadedConfig != null)
                 LoadedConfig.OnKillPlayer();
             gameObject.SetActive(false);
             Utility.Destroy(gameObject);
+            return true;
         }
     }
 }

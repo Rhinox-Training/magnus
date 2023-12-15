@@ -326,7 +326,7 @@ namespace Rhinox.Magnus
         private IEnumerator RespawnPlayerAndCleanUpArea(GuidAsset playerStartIdentifier, bool skipTransition)
         {
             PlayerStart playerStart = PlayerStart.FindInCurrentScene(playerStartIdentifier);
-            PlayerManager.Instance.RespawnPlayer(playerStart);
+            PlayerManager.Instance.RespawnLocalPlayer(playerStart);
             
             if (!skipTransition)
                 yield return HandleEnterTransition();
