@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Reflection;
 
@@ -60,6 +61,14 @@ namespace Rhinox.Magnus.Editor.TypeGenerator
                 .Replace("<", "_")
                 .Replace(">", "_")
                 .Replace("[]", "_ARRAY_");
+        }
+
+        public bool GenericConstraintMatchesType(Type innerType)
+        {
+            var genericArg = _openGenericType.GetGenericArguments().FirstOrDefault();
+            if (genericArg == null)
+                return true;
+            return innerType.InheritsFrom(genericArg.BaseType);
         }
     }
 }
