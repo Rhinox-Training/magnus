@@ -28,7 +28,7 @@ public static class UnityGenericImplementationGenerator
         codeGen.CreateNamespace(typeDefinition.Namespace);
         foreach (var innerType in typeGeneratorOptions)
         {
-            if (innerType == null || innerType.IsGenericTypeDefinition)
+            if (innerType == null || innerType.IsGenericTypeDefinition || !genericTypeGen.GenericConstraintMatchesType(innerType))
                 continue;
             string typeImplDefinition = genericTypeGen.GetTypeImplementation(innerType);
             codeGen.AddRaw(typeImplDefinition);
