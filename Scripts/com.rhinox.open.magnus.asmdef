@@ -12,7 +12,9 @@
         "com.rhinox.open.guiutils.editor"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+    "excludePlatforms": [
+        "WindowsStandalone32"
+    ],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
@@ -28,6 +30,11 @@
             "name": "com.rhinox.open.vortex",
             "expression": "0.1.0",
             "define": "USING_VORTEX"
+        },
+        {
+            "name": "com.rhinox.open.vortex",
+            "expression": "0.5.0",
+            "define": "VORTEX_0_5_0"
         }
     ],
     "noEngineReferences": false
