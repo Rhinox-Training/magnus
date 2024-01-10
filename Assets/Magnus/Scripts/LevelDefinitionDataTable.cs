@@ -4,7 +4,9 @@ using Rhinox.Vortex.File;
 
 namespace Rhinox.Magnus
 {
+#if !VORTEX_0_5_0
     [DataEndPoint(typeof(FileEndPoint))]
+#endif
     public class LevelDefinitionDataTable : DataTable<LevelDefinitionData>
     {
         protected override string _tableName => "level-definitions";

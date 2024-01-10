@@ -1,6 +1,5 @@
 {
     "name": "com.rhinox.open.magnus",
-    "rootNamespace": "",
     "references": [
         "Unity.TextMeshPro",
         "com.rhinox.open.lightspeed",
@@ -9,10 +8,13 @@
         "com.rhinox.open.guiutils.attributes",
         "com.rhinox.open.utilities",
         "Tayx.Graphy",
-        "com.rhinox.open.vortex"
+        "com.rhinox.open.vortex",
+        "com.rhinox.open.guiutils.editor"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+    "excludePlatforms": [
+        "WindowsStandalone32"
+    ],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
@@ -28,6 +30,11 @@
             "name": "com.rhinox.open.vortex",
             "expression": "0.1.0",
             "define": "USING_VORTEX"
+        },
+        {
+            "name": "com.rhinox.open.vortex",
+            "expression": "0.5.0",
+            "define": "VORTEX_0_5_0"
         }
     ],
     "noEngineReferences": false
