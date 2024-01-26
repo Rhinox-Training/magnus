@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.rhinox.open.guiutils": "2.12.3",
+    "com.rhinox.open.guiutils": "3.1.1",
     "com.rhinox.open.lightspeed": "1.8.1",
     "com.rhinox.open.perceptor": "0.2.0",
     "com.rhinox.open.utilities": "1.9.0",
