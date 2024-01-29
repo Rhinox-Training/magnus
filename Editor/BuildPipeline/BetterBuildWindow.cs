@@ -7,8 +7,6 @@ using Rhinox.GUIUtils.Editor.Helpers;
 using Rhinox.Lightspeed;
 using Rhinox.Lightspeed.Editor;
 using Rhinox.Perceptor;
-using Rhinox.Utilities;
-using Rhinox.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -203,7 +201,7 @@ namespace Rhinox.Magnus.Editor
                     {
                         string fileNameResult = filename;
                         if (_buildConfigs != null && _buildConfigs.Any(x => x.name.Equals(filename, StringComparison.InvariantCulture)))
-                            fileNameResult += " (2)";
+                            fileNameResult += " (1)";
 
                         ScriptableObjectUtility.CreateAsset<BuildConfig>("Assets/Editor", fileNameResult);
                         ForceMenuTreeRebuild();
@@ -285,7 +283,7 @@ namespace Rhinox.Magnus.Editor
         public string DateFormat;
         
         [OnValueChanged(nameof(UpdateSettings)), ValueDropdown(nameof(_separators))]
-        [HorizontalGroup("DateFormat"), HideLabel]
+        [HorizontalGroup("DateFormat"), LabelText("Separator"), LabelWidth(60f)]
         public string DateFormatSeparator;
 
         [OnValueChanged(nameof(UpdateSettings)), ValueDropdown(nameof(_timeFormatOptions))]
@@ -293,7 +291,7 @@ namespace Rhinox.Magnus.Editor
         public string TimeFormat;
         
         [OnValueChanged(nameof(UpdateSettings)), ValueDropdown(nameof(_separators))]
-        [HorizontalGroup("TimeFormat"), HideLabel]
+        [HorizontalGroup("TimeFormat"), LabelText("Separator"), LabelWidth(60f)]
         public string TimeFormatSeparator;
         
         public BetterBuildSettingsUI(SlidePageNavigationHelper<object> pager) : base(pager)
