@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Rhinox.Magnus.Editor
-{ 
+{
     public enum BuildPlatform
     {
         Windows,
@@ -27,14 +27,14 @@ namespace Rhinox.Magnus.Editor
         DebugDeep,
         Release
     }
-    
+
     public enum CompressionOptions
     {
         Default,
         None,
         Full
     }
-    
+
     public class BuildConfig : ScriptableObject
     {
         [ValueDropdown("GetBuildPlatformsPretty"), HorizontalGroup("BuildConfig"), HideLabel]
@@ -42,27 +42,34 @@ namespace Rhinox.Magnus.Editor
 
         [HorizontalGroup("BuildConfig"), HideLabel]
         public BuildConfiguration Configuration;
-        
+
         [ListDrawerSettings(Expanded = true, DraggableItems = true, CustomAddFunction = "OnAddScene")]
         [CustomValueDrawer("OnDrawScenes")]
         [CustomContextMenu("Import Scenes from Build Settings", nameof(UseScenesFromBuildSettings))]
         [SerializeReference]
         public SceneReferenceData[] Scenes;
-        
+
         [PropertyTooltip("$OutputFormatTooltip")]
         [PropertyOrder(50)]
         public string OutputFormat = "{project}/{project}_{config}_{date}_{rc}";
+
+        [FolderPath, PropertyOrder(51)]
+        public string OutputFolder;
+
+        [ReadOnly, PropertyOrder(51)]
+        [LabelText("$FinalOutputLocation")]
+        private string FinalOutputLocation => $"{OutputFolder}/{OutputFormat}";
 
         [FoldoutGroup("Advanced", order: 100)]
         [ListDrawerSettings(DraggableItems = true)]
         [SerializeReference]
         public List<PreBuildStep> PreBuildSteps = new List<PreBuildStep>();
-        
+
         [FoldoutGroup("Advanced", order: 100)]
         [ListDrawerSettings(DraggableItems = true)]
         [SerializeReference]
         public List<PostBuildStep> PostBuildSteps = new List<PostBuildStep>();
-        
+
         [FoldoutGroup("Advanced", order: 100)]
         public string ScriptingDefineSymbols;
 
@@ -72,14 +79,14 @@ namespace Rhinox.Magnus.Editor
         [FoldoutGroup("Advanced", order: 100)]
         [DisableIf(nameof(Configuration), BuildConfiguration.Release)]
         public bool WaitForPlayerConnection;
-        
+
         [FoldoutGroup("Advanced", order: 100)]
         [DisableIf(nameof(Configuration), BuildConfiguration.Release)]
         public bool IncludeTestCode;
 
         [FoldoutGroup("Advanced", order: 100)]
         public CompressionOptions Compression;
-        
+
         private void UseScenesFromBuildSettings()
         {
 #if UNITY_EDITOR
@@ -95,28 +102,14 @@ namespace Rhinox.Magnus.Editor
             Scenes = scenes.ToArray();
 #endif
         }
-        
-        private string OutputFormatTooltip 
-        { 
+
+        private string OutputFormatTooltip
+        {
             get
             {
-                // TODO: helper method?
-                string buildPath = OutputFormat.Trim();
+                string buildPath = MagnusUtils.GetBuildPathFromConfig(OutputFormat, OutputFolder,
+                    name, Platform, Configuration);
 
-                buildPath = buildPath.ToLinuxSafePath();
-                if (buildPath.EndsWith("/"))
-                    buildPath = buildPath.Substring(0, buildPath.Length - 1);
-
-                var buildTime = DateTime.Now;
-                buildPath = buildPath.Replace(BuildConstants.DATE_FORMAT_KEY, buildTime.ToString(BetterBuildSettings.DateFormat));
-                buildPath = buildPath.Replace(BuildConstants.TIME_FORMAT_KEY, buildTime.ToString(BetterBuildSettings.TimeFormat));
-                buildPath = buildPath.Replace(BuildConstants.CONFIG_FORMAT_KEY, Configuration == BuildConfiguration.Release ? "rel" : "dbg");
-                buildPath = buildPath.Replace(BuildConstants.PROJECT_FORMAT_KEY, Application.productName);
-                buildPath = buildPath.Replace(BuildConstants.PLATFORM_FORMAT_KEY, Platform.ToString());
-                buildPath = buildPath.Replace(BuildConstants.BUILDCONFIG_NAME_FORMAT_KEY, name.Trim());
-                
-                // {rc} will be ignored due to not wanting to compute that every single frame
-                
                 return "OutputFormat to use for building the project (supports subfolders):\n" +
                        "Available keywords: {project},{name},{config},{platform},{date},{time},{rc}\n" +
                        "e.g.: '{project}/{project}_{config}_{date}_{rc}'\n" +
@@ -136,12 +129,12 @@ namespace Rhinox.Magnus.Editor
                 .Select(x => new ValueDropdownItem(x.ToString(), x))
                 .ToArray();
         }
-        
+
         private SceneReferenceData OnAddScene()
         {
             return new SceneReferenceData();
         }
-        
+
         private SceneReferenceData OnDrawScenes(SceneReferenceData scene, GUIContent label)
         {
             EditorGUILayout.BeginVertical();
@@ -158,7 +151,8 @@ namespace Rhinox.Magnus.Editor
                 if (newAsset != null && newAsset != asset)
                 {
                     // Call Constructor taking a SceneAsset
-                    scene = (SceneReferenceData) Activator.CreateInstance(typeof(SceneReferenceData), new[] {newAsset});
+                    scene = (SceneReferenceData)Activator.CreateInstance(typeof(SceneReferenceData),
+                        new[] { newAsset });
                     asset = newAsset;
                 }
                 else if (newAsset == null && newAsset != asset)
@@ -172,7 +166,7 @@ namespace Rhinox.Magnus.Editor
             return scene;
         }
 #endif
-#endregion
+        #endregion
     }
 
     public static class BuildConfigExtensions
@@ -222,7 +216,7 @@ namespace Rhinox.Magnus.Editor
                     throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
             }
         }
-        
+
         public static BuildTargetGroup AsBuildTargetGroup(this BuildPlatform platform)
         {
             switch (platform)
