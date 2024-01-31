@@ -6,6 +6,8 @@ using Rhinox.Lightspeed.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+//UNITY_2021_2_OR_NEWER
+using System.Reflection;
 
 namespace Rhinox.Magnus.Editor
 {
@@ -155,8 +157,8 @@ namespace Rhinox.Magnus.Editor
                 _activeSubTargetMethod = typeof(EditorUserBuildSettings).GetMethod("GetActiveSubtargetFor",
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             }
-            
-            return (int)_activeSubTargetMethod.Invoke(null, new object[] {buildTarget});
+
+            return (int)_activeSubTargetMethod.Invoke(null, new object[] { buildTarget });
         }
 #endif
 
