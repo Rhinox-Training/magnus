@@ -98,7 +98,9 @@ namespace Rhinox.Magnus.Editor
             // data.ps4HardwareTarget = EditorUserBuildSettings.ps4HardwareTarget;
             data.selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
             data.selectedStandaloneTarget = EditorUserBuildSettings.selectedStandaloneTarget;
+#if !UNITY_2023_1_OR_NEWER
             data.streamingInstallLaunchRange = EditorUserBuildSettings.streamingInstallLaunchRange;
+#endif
 #if !UNITY_2021_1_OR_NEWER
             data.symlinkLibraries = EditorUserBuildSettings.symlinkLibraries;
 #else
@@ -195,7 +197,9 @@ namespace Rhinox.Magnus.Editor
             // EditorUserBuildSettings.ps4HardwareTarget = ps4HardwareTarget;
             EditorUserBuildSettings.selectedBuildTargetGroup = selectedBuildTargetGroup;
             EditorUserBuildSettings.selectedStandaloneTarget = selectedStandaloneTarget;
+#if !UNITY_2023_1_OR_NEWER
             EditorUserBuildSettings.streamingInstallLaunchRange = streamingInstallLaunchRange;
+#endif
 #if !UNITY_2021_1_OR_NEWER
             EditorUserBuildSettings.symlinkLibraries = symlinkLibraries;
 #else
