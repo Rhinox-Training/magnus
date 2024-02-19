@@ -25,7 +25,7 @@ namespace Rhinox.Magnus
         private static string _scenePathTransitionTarget = null;
         private static LevelDefinitionData _sceneDataTransitionTarget = null;
 
-        public delegate void SceneLoadEventHandler(LevelLoader sender, SceneReferenceData loadedScene, LoadState state);
+        public delegate void SceneLoadEventHandler(LevelLoader sender, SceneReference loadedScene, LoadState state);
 
         public static event SceneLoadEventHandler LevelLoaded;
 
@@ -39,7 +39,7 @@ namespace Rhinox.Magnus
         
         private LevelDefinitionData _activeSceneData;
         private string _activeScenePath;
-        private List<SceneReferenceData> _additivelyLoadedScenes;
+        private List<SceneReference> _additivelyLoadedScenes;
         
         private static readonly YieldInstruction _awaiter = new WaitForSeconds(0.1f);
         
@@ -106,7 +106,7 @@ namespace Rhinox.Magnus
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            _additivelyLoadedScenes = new List<SceneReferenceData>();
+            _additivelyLoadedScenes = new List<SceneReference>();
             if (!IsConfiguredAndEnabled())
             {
                 PLog.Warn<MagnusLogger>("LevelLoader not configured in Project Settings");
@@ -375,7 +375,7 @@ namespace Rhinox.Magnus
             _activeArea.HandleProgress(LoadingStage.Initializing, 1, 1, 1.0f);
         }
         
-        private IEnumerator LoadAdditiveLevelsAsync(SceneReferenceData[] datas)
+        private IEnumerator LoadAdditiveLevelsAsync(SceneReference[] datas)
         {
             if (datas.IsNullOrEmpty())
                 yield break;
@@ -622,7 +622,7 @@ namespace Rhinox.Magnus
             _activeScenePath = _scenePathTransitionTarget;
             _scenePathTransitionTarget = null;
             
-            LevelLoaded?.Invoke(this, new SceneReferenceData(_activeScenePath), LoadState.MainScene);
+            LevelLoaded?.Invoke(this, new SceneReference(_activeScenePath), LoadState.MainScene);
 
             _runningLoad = false;
         }

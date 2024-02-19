@@ -12,7 +12,7 @@ namespace Rhinox.Magnus
 {
     public abstract class SceneReferenceResolver : IObjectReferenceResolver
     {
-        public SceneReferenceData SceneReference;
+        public SceneReference SceneReference;
         public string Path;
 
         public string ErrorMessage => $"Object not found: {Path}";
@@ -20,7 +20,7 @@ namespace Rhinox.Magnus
 
         protected SceneReferenceResolver(Scene scene)
         {
-            SceneReference = new SceneReferenceData(scene);
+            SceneReference = new SceneReference(scene);
         }
 
         public abstract Object Resolve();

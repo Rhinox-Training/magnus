@@ -19,9 +19,9 @@ public class LevelDefinitionData
     public string Name;
     public string DisplayName;
     
-    public SceneReferenceData Scene;
+    public SceneReference Scene;
 
-    public SceneReferenceData[] AdditionalScenes;
+    public SceneReference[] AdditionalScenes;
     
     [ValueDropdown(nameof(GetGuidOptions))]
     public SerializableGuid PlayerStart;

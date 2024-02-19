@@ -28,8 +28,14 @@ namespace Rhinox.Magnus
             get
             {
                 if (_generatedRoot is null)
+                {
+                    PLog.Info<MagnusLogger>($"{typeof(T).Name} created a root.");
                     _generatedRoot = new GameObject($"[GENERATED] {GetType().Name} Root");
-                Object.DontDestroyOnLoad(_generatedRoot);
+                    Object.DontDestroyOnLoad(_generatedRoot);
+                }
+                if (_generatedRoot == null)
+                    PLog.Info<MagnusLogger>($"{typeof(T).Name}'s root was killed...");
+
                 return _generatedRoot.transform;
             }
         }

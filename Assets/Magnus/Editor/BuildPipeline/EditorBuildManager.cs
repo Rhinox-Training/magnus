@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using Rhinox.Lightspeed;
 using Rhinox.Perceptor;
@@ -69,7 +70,7 @@ namespace Rhinox.Magnus.Editor
             searchString = searchString.Trim();
 
             AssetDatabase.Refresh();
-            var configs = Utility.FindScriptableObjectsOfType<BuildConfig>();
+            var configs = Utility.FindAssets<BuildConfig>();
             foreach (var config in configs)
             {
                 if (config.name.Equals(searchString, StringComparison.InvariantCulture))

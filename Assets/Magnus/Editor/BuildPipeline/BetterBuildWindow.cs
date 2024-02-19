@@ -95,7 +95,7 @@ namespace Rhinox.Magnus.Editor
             tree.Config.SearchFunction = SimpleSearch;
 #endif
 
-            _buildConfigs = Utility.FindScriptableObjectsOfType<BuildConfig>();
+            _buildConfigs = Utility.FindAssets<BuildConfig>();
             for (var i = 0; i < _buildConfigs.Count; i++)
             {
                 var buildConfig = _buildConfigs[i];
