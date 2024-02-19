@@ -47,7 +47,7 @@ namespace Rhinox.Magnus.Editor
         [CustomValueDrawer("OnDrawScenes")]
         [CustomContextMenu("Import Scenes from Build Settings", nameof(UseScenesFromBuildSettings))]
         [SerializeReference]
-        public SceneReferenceData[] Scenes;
+        public SceneReference[] Scenes;
 
         [PropertyTooltip("$OutputFormatTooltip")]
         [PropertyOrder(50)]
@@ -90,14 +90,14 @@ namespace Rhinox.Magnus.Editor
         private void UseScenesFromBuildSettings()
         {
 #if UNITY_EDITOR
-            var scenes = Scenes != null ? Scenes.ToList() : new List<SceneReferenceData>();
+            var scenes = Scenes != null ? Scenes.ToList() : new List<SceneReference>();
             foreach (var scene in EditorBuildSettings.scenes)
             {
                 bool existingScene =
                     scenes.Any(x => x.ScenePath.Equals(scene.path, StringComparison.InvariantCulture));
                 if (existingScene)
                     continue;
-                scenes.Add(new SceneReferenceData(scene.path));
+                scenes.Add(new SceneReference(scene.path));
             }
             Scenes = scenes.ToArray();
 #endif
@@ -130,12 +130,12 @@ namespace Rhinox.Magnus.Editor
                 .ToArray();
         }
 
-        private SceneReferenceData OnAddScene()
+        private SceneReference OnAddScene()
         {
-            return new SceneReferenceData();
+            return new SceneReference();
         }
 
-        private SceneReferenceData OnDrawScenes(SceneReferenceData scene, GUIContent label)
+        private SceneReference OnDrawScenes(SceneReference scene, GUIContent label)
         {
             EditorGUILayout.BeginVertical();
             using (new eUtility.IndentedLayout())
@@ -146,14 +146,12 @@ namespace Rhinox.Magnus.Editor
                 // Draw scene selector
                 var asset = scene.SceneAsset;
 
-                var newAsset = EditorGUILayout.ObjectField(asset, typeof(SceneAsset), false);
+                var newAsset = (SceneAsset) EditorGUILayout.ObjectField(asset, typeof(SceneAsset), false);
 
                 if (newAsset != null && newAsset != asset)
                 {
-                    // Call Constructor taking a SceneAsset
-                    scene = (SceneReferenceData)Activator.CreateInstance(typeof(SceneReferenceData),
-                        new[] { newAsset });
                     asset = newAsset;
+                    scene = new SceneReference(newAsset);
                 }
                 else if (newAsset == null && newAsset != asset)
                     scene.ScenePath = null;
