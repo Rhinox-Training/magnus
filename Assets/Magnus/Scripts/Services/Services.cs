@@ -13,7 +13,6 @@ namespace Rhinox.Magnus
 {
     public static class Services
     {
-
         public static T FindService<T>() where T : IService
         {
             return ServiceInitiator.ActiveServices.OfType<T>().FirstOrDefault();
@@ -81,11 +80,11 @@ namespace Rhinox.Magnus
         private static void OnRuntimeMethodLoad()
         {
             Application.quitting += OnQuitting;
-
-            List<Type> types = new List<Type>()
-            {
-                typeof(InternalHelperService)
-            };
+            
+            List<Type> types = new List<Type>();
+#if !UNITY_2023_1_OR_NEWER // the void scene has been conquered
+            types.Add(typeof(InternalHelperService));
+#endif
             foreach (var type in Services.GetAvailableServices())
             {
                 if (!ShouldLoadService(type))
@@ -105,7 +104,11 @@ namespace Rhinox.Magnus
             }
 
             _activeServices = serviceLoad.ToList();
-#if UNITY_EDITOR
+            
+            // In these cases the void scene is not applicable, and we can just awake the services
+            // When the void scene exists, gameobjects created by the services will be lost (destroyed)
+            // That's why we created the InternalHelperService which initializes the other services when it is lost
+#if UNITY_EDITOR || UNITY_2023_1_OR_NEWER
             UnloadService<InternalHelperService>();
             AwakeServices();
 #endif
@@ -123,7 +126,7 @@ namespace Rhinox.Magnus
         }
 
         private static void OnQuitting()
-        { 
+        {
             for (var i = 0; i < _activeServices.Count; i++)
             {
                 var service = _activeServices[i];
@@ -147,7 +150,7 @@ namespace Rhinox.Magnus
             if (m == null)
                 return null;
 
-            var service = m.Invoke(null, new [] { type }) as IService;
+            var service = m.Invoke(null, new[] { type }) as IService;
             return service;
         }
 
@@ -155,7 +158,7 @@ namespace Rhinox.Magnus
         {
             if (_servicesWaked)
                 return;
-            
+
             _servicesWaked = true;
             // Execute the Awake of all the services
             for (var i = 0; i < _activeServices.Count; i++)
@@ -178,10 +181,9 @@ namespace Rhinox.Magnus
             }
         }
 
-        internal static bool UnloadService<T>() where T : AutoService<T>, new()
-            => UnloadService(typeof(T));
-        
-        
+        internal static bool UnloadService<T>() where T : AutoService<T>, new() => UnloadService(typeof(T));
+
+
         internal static bool UnloadService(Type t)
         {
             bool unloaded = false;
